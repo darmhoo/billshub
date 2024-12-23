@@ -157,4 +157,6 @@ return [
     */
 
     'pagination_theme' => 'tailwind',
+
+    'hotwire' => true
 ];
