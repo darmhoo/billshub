@@ -4,6 +4,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
+        "postinstall": "npm run prod",
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=livewire:assets --ansi --force"
         ]
