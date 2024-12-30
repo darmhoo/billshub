@@ -61,7 +61,6 @@ class AppPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
                 EnsureEmailIsVerified::class,
-
             ]);
     }
 }
