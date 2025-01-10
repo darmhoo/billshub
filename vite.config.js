@@ -9,7 +9,10 @@ export default defineConfig({
                 ...refreshPaths,
                 'app/Livewire/**',
                 'app/Filament/**'
-            ]
+            ],
         }),
     ],
+    server: {
+        port: 5174
+    }
 });

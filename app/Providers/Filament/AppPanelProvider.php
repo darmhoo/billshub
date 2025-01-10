@@ -2,11 +2,18 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\App\Pages\AirtimeCash;
+use App\Filament\App\Pages\BuyAirtime;
+use App\Filament\App\Pages\BuyData;
+use App\Filament\Pages\Auth\EmailVerification;
 use App\Filament\Pages\Auth\RegisterUser;
+use App\Filament\Pages\Settings;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -32,19 +39,29 @@ class AppPanelProvider extends PanelProvider
             ->emailVerification()
             ->passwordReset()
             ->profile()
-            ->darkMode(false)
+            ->sidebarCollapsibleOnDesktop()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => '#674CC4',
             ])
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label('Shop')
+                    ->icon('heroicon-o-shopping-cart')
+            ])
+            ->viteTheme('resources/css/app.css')
+            ->font('poppins')
             ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\\Filament\\App\\Resources')
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\\Filament\\App\\Pages')
             ->pages([
                 Pages\Dashboard::class,
+                BuyAirtime::class,
+                AirtimeCash::class,
+                BuyData::class
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'App\\Filament\\App\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                // Widgets\AccountWidget::class,
+                // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

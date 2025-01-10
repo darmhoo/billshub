@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d2a9c32db6a55131a580a75a7b7ce327",
+    "content-hash": "91a6ae0e45ce7158c66f40a7deb6009a",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -4895,6 +4895,76 @@
                 }
             ],
             "time": "2024-12-09T16:29:14+00:00"
+        },
+        {
+            "name": "stephenjude/laravel-wallet",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stephenjude/laravel-wallet.git",
+                "reference": "de27de2db6c6f94ba9f3360c967ca0cd8cd0c2e3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stephenjude/laravel-wallet/zipball/de27de2db6c6f94ba9f3360c967ca0cd8cd0c2e3",
+                "reference": "de27de2db6c6f94ba9f3360c967ca0cd8cd0c2e3",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^9.0|^10.0|^11.0",
+                "php": "^8.0|^8.1|^8.2",
+                "spatie/laravel-package-tools": "^1.9.2"
+            },
+            "require-dev": {
+                "nunomaduro/collision": "^7.0|^8.0",
+                "orchestra/testbench": "^9.0",
+                "pestphp/pest": "^2.28",
+                "phpunit/phpunit": "^10.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": [],
+                    "providers": [
+                        "Stephenjude\\Wallet\\WalletServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stephenjude\\Wallet\\": "src",
+                    "Stephenjude\\Wallet\\Tests\\Database\\Factories\\": "tests/database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "stephenjude",
+                    "email": "stephenjudesuccess@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple wallet implementation for Laravel",
+            "homepage": "https://github.com/stephenjude/laravel-wallet",
+            "keywords": [
+                "laravel",
+                "stephenjude",
+                "wallet"
+            ],
+            "support": {
+                "issues": "https://github.com/stephenjude/laravel-wallet/issues",
+                "source": "https://github.com/stephenjude/laravel-wallet/tree/2.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/stephenjude",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-07-15T21:25:28+00:00"
         },
         {
             "name": "symfony/clock",
@@ -10632,12 +10702,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
