@@ -8,13 +8,15 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Stephenjude\Wallet\Traits\HasWallet;
 
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasWallet;
 
     /**
      * The attributes that are mass assignable.
@@ -56,7 +58,22 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         if ($panel->getId() === 'admin') {
             return $this->role === 'admin';
         }
- 
+
         return true;
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url;
+    }
+
+    public function transaction(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(UserAccount::class);
     }
 }

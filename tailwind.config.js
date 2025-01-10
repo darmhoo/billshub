@@ -1,5 +1,5 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
-import preset from './vendor/filament/support/tailwind.config.preset'
+import preset from './vendor/filament/filament/tailwind.config.preset';
 
 /** @type {import('tailwindcss').Config} */
 export default {
