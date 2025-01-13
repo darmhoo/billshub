@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class UserAccount extends Model
 {
@@ -14,4 +15,6 @@ class UserAccount extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    
 }

@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\User;
+use App\Filament\Resources\AutomationResource\Pages;
+use App\Filament\Resources\AutomationResource\RelationManagers;
+use App\Models\Automation;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class UserResource extends Resource
+class AutomationResource extends Resource
 {
-    protected static ?string $model = User::class;
+    protected static ?string $model = Automation::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -26,27 +26,26 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('role')
-                    ->required(),
-                Forms\Components\TextInput::make('phone_number')
-                    ->tel()
+                Forms\Components\TextInput::make('username')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('wallet_balance')
-                    ->required()
-                    ->numeric()
-                    ->default(0.00),
-                Forms\Components\TextInput::make('account_type_id')
-                    ->numeric()
+                Forms\Components\TextInput::make('base_url')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\Toggle::make('is_active')
+                    ->required(),
+                Forms\Components\TextInput::make('secret_key')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('public_key')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('api_key')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('password')
+                    ->password()
+                    ->maxLength(255)
                     ->default(null),
             ]);
     }
@@ -57,11 +56,18 @@ class UserResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                Tables\Columns\TextColumn::make('username')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('base_url')
+                    ->searchable(),
+                Tables\Columns\IconColumn::make('is_active')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('secret_key')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('public_key')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('api_key')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -70,15 +76,6 @@ class UserResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('role'),
-                Tables\Columns\TextColumn::make('phone_number')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('wallet_balance')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('account_type_id')
-                    ->numeric()
-                    ->sortable(),
             ])
             ->filters([
                 //
@@ -103,9 +100,9 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => Pages\ListAutomations::route('/'),
+            'create' => Pages\CreateAutomation::route('/create'),
+            'edit' => Pages\EditAutomation::route('/{record}/edit'),
         ];
     }
 }
