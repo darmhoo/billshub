@@ -9,6 +9,7 @@ use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Stephenjude\Wallet\Traits\HasWallet;
@@ -75,5 +76,10 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function accounts(): HasMany
     {
         return $this->hasMany(UserAccount::class);
+    }
+
+    public function accountType(): HasOne
+    {
+        return $this->hasOne(AccountType::class);
     }
 }
