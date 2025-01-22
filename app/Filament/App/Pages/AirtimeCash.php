@@ -12,5 +12,10 @@ class AirtimeCash extends Page
 
     protected static ?string $title = "Convert Airtime to Cash";
     protected static ?string $navigationLabel = 'Airtime to Cash';
+    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationGroup = 'Services';
+
+
+
     
 }

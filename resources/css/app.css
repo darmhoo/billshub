@@ -2,3 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 @tailwind variants;
+
+.fi-sidebar {
+    @apply bg-gray-200 dark:bg-gray-950;
+}

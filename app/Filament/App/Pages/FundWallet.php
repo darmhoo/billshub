@@ -16,6 +16,9 @@ class FundWallet extends Page
 
     protected static ?string $title = 'Fund Wallet';
 
+    protected static ?int $navigationSort = 2;
+
+
     protected function getViewData(): array
     {
         $user = User::find(auth()->user()->id);
