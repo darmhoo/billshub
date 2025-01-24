@@ -2,6 +2,8 @@
 
 namespace App\Filament\App\Pages;
 
+use App\Filament\App\Widgets\AccountFundingList;
+use App\Filament\App\Widgets\StatsOverview;
 use Filament\Actions\Action;
 use Filament\Pages\Page;
 use Filament\Support\Enums\Alignment;
@@ -22,16 +24,25 @@ class Dashboard extends Page
     protected static ?int $navigationSort = 1;
 
 
-    public function onboardingAction(): Action
+    // public function onboardingAction(): Action
+    // {
+    //     return Action::make('onboarding')
+    //         ->modalHeading('Gbills247')
+    //         ->modalDescription('You are welcome to GBILLZ247 where there is endless possibilities')
+    //         ->disabledForm()
+    //         ->modalSubmitAction(false)
+    //         ->modalCancelAction(false)
+    //         ->modalAlignment(Alignment::Center)
+    //         ->visible(true);
+    // }
+
+    protected function getHeaderWidgets(): array
     {
-        return Action::make('onboarding')
-            ->modalHeading('Gbills247')
-            ->modalDescription('You are welcome to GBILLZ247 where there is endless possibilities')
-            ->disabledForm()
-            ->modalSubmitAction(false)
-            ->modalCancelAction(false)
-            ->modalAlignment(Alignment::Center)
-            ->visible(true);
+        return [StatsOverview::class, AccountFundingList::class];
+    }
+
+    public function getHeaderWidgetsColumns(): array|int|string{
+        return 1;
     }
 
 }

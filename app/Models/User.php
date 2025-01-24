@@ -8,6 +8,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -78,8 +79,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return $this->hasMany(UserAccount::class);
     }
 
-    public function accountType(): HasOne
+    public function accountType(): BelongsTo
     {
-        return $this->hasOne(AccountType::class);
+        return $this->belongsTo(AccountType::class, );
     }
 }

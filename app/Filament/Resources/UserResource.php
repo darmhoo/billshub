@@ -5,12 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
+use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
@@ -30,11 +32,8 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
+
+
                 Forms\Components\TextInput::make('role')
                     ->required(),
                 Forms\Components\TextInput::make('phone_number')
@@ -45,9 +44,9 @@ class UserResource extends Resource
                     ->required()
                     ->numeric()
                     ->default(0.00),
-                Forms\Components\TextInput::make('account_type_id')
-                    ->numeric()
-                    ->default(null),
+                Forms\Components\Select::make('account_type_id')
+                    ->relationship(name: 'accountType', titleAttribute: 'name')
+
             ]);
     }
 
@@ -59,9 +58,7 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -73,18 +70,19 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('role'),
                 Tables\Columns\TextColumn::make('phone_number')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('wallet_balance')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('wallet_balance')->money('NGN')                    
                     ->sortable(),
-                Tables\Columns\TextColumn::make('account_type_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('accountType.name')
+                    ->searchable()
                     ->sortable(),
             ])
             ->filters([
                 //
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
