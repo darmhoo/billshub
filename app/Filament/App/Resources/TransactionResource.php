@@ -49,32 +49,32 @@ class TransactionResource extends Resource
             })
             ->emptyStateHeading('No Transactions Yet')
             ->columns([
-                    //
-                    TextColumn::make('id'),
-                    TextColumn::make('transaction_type')->searchable(),
-                    TextColumn::make('price')->money('NGN'),
-                    TextColumn::make('amount_before')->money('NGN'),
-                    TextColumn::make('amount_after')->money('NGN'),
-                    TextColumn::make('status')->badge()
-                        ->color(fn(string $state): string => match ($state) {
-                            'completed' => 'success',
-                            'pending' => 'warning',
-                            'failed' => 'danger',
-                            default => 'primary',
-                        }),
-                    TextColumn::make('created_at')->dateTime()->searchable(),
-                ])
+                //
+                TextColumn::make('id'),
+                TextColumn::make('transaction_type')->searchable(),
+                TextColumn::make('price')->money('NGN')->label('Amount'),
+                TextColumn::make('amount_before')->money('NGN')->label('Balance Before'),
+                TextColumn::make('amount_after')->money('NGN')->label('Balance After'),
+                TextColumn::make('status')->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'completed' => 'success',
+                        'pending' => 'warning',
+                        'failed' => 'danger',
+                        default => 'primary',
+                    }),
+                TextColumn::make('created_at')->dateTime()->searchable(),
+            ])
             ->filters([
-                    //
-                ])
+                //
+            ])
             ->actions([
-                    // Tables\Actions\EditAction::make(),
-                ])
+                // Tables\Actions\EditAction::make(),
+            ])
             ->bulkActions([
-                    Tables\Actions\BulkActionGroup::make([
-                        Tables\Actions\DeleteBulkAction::make(),
-                    ]),
-                ]);
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 
     public static function getRelations(): array
