@@ -32,7 +32,7 @@ class StatsOverview extends BaseWidget
                 ->description('Your wallet balance')
                 ->descriptionIcon('heroicon-o-wallet', IconPosition::Before),
 
-            Stat::make('Account Type', $user->accountType->name)
+            Stat::make('Account Type', $user->accountType->name ?? '')
                 ->color('success')
                 ->description('Upgrade your account')
                 ->descriptionIcon('heroicon-o-chevron-double-up', IconPosition::Before),
