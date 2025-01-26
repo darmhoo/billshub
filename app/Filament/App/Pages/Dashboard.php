@@ -4,13 +4,14 @@ namespace App\Filament\App\Pages;
 
 use App\Filament\App\Widgets\AccountFundingList;
 use App\Filament\App\Widgets\StatsOverview;
+use App\Filament\App\Widgets\TransactionsWidget;
 use Filament\Actions\Action;
 use Filament\Pages\Page;
 use Filament\Support\Enums\Alignment;
 
 class Dashboard extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-chart-bar-square';
+    protected static ?string $navigationIcon = 'heroicon-o-home';
 
     public $defaultAction = 'onboarding';
 
@@ -38,10 +39,11 @@ class Dashboard extends Page
 
     protected function getHeaderWidgets(): array
     {
-        return [StatsOverview::class, AccountFundingList::class];
+        return [StatsOverview::class, AccountFundingList::class, TransactionsWidget::class];
     }
 
-    public function getHeaderWidgetsColumns(): array|int|string{
+    public function getHeaderWidgetsColumns(): array|int|string
+    {
         return 1;
     }
 

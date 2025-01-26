@@ -10,9 +10,14 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 class StatsOverview extends BaseWidget
 {
     // protected static ?string $pollingInterval = '10s';
-    protected ?string $heading = 'Analytics';
 
-    protected ?string $description = 'An overview of some analytics.';
+
+    protected ?string $heading = '';
+
+    protected function getDescription(): string|null
+    {
+        return 'Welcome back, ' . auth()->user()->name;
+    }
     protected function getStats(): array
     {
 
@@ -24,11 +29,14 @@ class StatsOverview extends BaseWidget
         return [
             Stat::make('Wallet', '₦' . number_format($user->wallet_balance, 2))
                 ->color('success')
-                ->url('/filament/resources/users/' . auth()->user()->id)
-                ->description('How much you get in your wallet')
-                ->descriptionIcon('heroicon-o-currency-dollar', IconPosition::After),
-            Stat::make('Bounce rate', '21%'),
-            Stat::make('Average time on page', '3:12'),
+                ->description('Your wallet balance')
+                ->descriptionIcon('heroicon-o-wallet', IconPosition::Before),
+
+            Stat::make('Account Type', $user->accountType->name)
+                ->color('success')
+                ->description('Upgrade your account')
+                ->descriptionIcon('heroicon-o-chevron-double-up', IconPosition::Before),
+
 
         ];
     }

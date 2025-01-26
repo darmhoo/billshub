@@ -28,6 +28,7 @@ class AppPanelProvider extends PanelProvider
     {
         return $panel
             ->id('app')
+            ->sidebarWidth('15rem')
             ->path('app')
             ->login()
             ->registration(RegisterUser::class)

@@ -18,7 +18,7 @@ use Request;
 
 class BuyAirtime extends Page implements HasForms
 {
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-phone-arrow-down-left';
 
     protected static string $view = 'filament.app.pages.buy-airtime';
     protected static ?int $navigationSort = 3;
@@ -38,6 +38,7 @@ class BuyAirtime extends Page implements HasForms
                 Select::make('network')
                     ->options(Network::query()->pluck('name', 'id'))
                     ->required()
+                    ->translateLabel()
 
                     ->placeholder('Choose network')
                     ->live()

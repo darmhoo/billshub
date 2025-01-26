@@ -6,7 +6,7 @@ use Filament\Pages\Page;
 
 class BuyExamVoucher extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
     protected static string $view = 'filament.app.pages.buy-exam-voucher';
 

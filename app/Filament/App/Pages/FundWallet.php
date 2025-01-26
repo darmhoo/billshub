@@ -8,7 +8,7 @@ use Filament\Pages\Page;
 
 class FundWallet extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-wallet';
     protected static ?string $navigationGroup = 'Wallet';
 
 

@@ -6,7 +6,7 @@ use Filament\Pages\Page;
 
 class AirtimeCash extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
     protected static string $view = 'filament.app.pages.airtime-cash';
 
@@ -17,5 +17,5 @@ class AirtimeCash extends Page
 
 
 
-    
+
 }

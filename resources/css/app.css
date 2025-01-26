@@ -8,5 +8,13 @@
 }
 
 .fi-sidebar-item-label {
-    @apply text-cyan-400 dark:text-gray-300;
+    @apply text-[#ddd] dark:text-gray-300;
 }
+/* .fi-sidebar-item {
+    @apply bg-gray-800 dark:bg-gray-900;
+} */
+
+
+
+
+

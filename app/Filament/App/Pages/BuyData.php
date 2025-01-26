@@ -16,7 +16,7 @@ use Request;
 
 class BuyData extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-wifi';
 
     protected static string $view = 'filament.app.pages.buy-data';
 

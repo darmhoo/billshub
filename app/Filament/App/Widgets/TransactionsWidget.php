@@ -1,40 +1,17 @@
 <?php
 
-namespace App\Filament\App\Resources;
+namespace App\Filament\App\Widgets;
 
-use App\Filament\App\Resources\TransactionResource\Pages;
-use App\Filament\App\Resources\TransactionResource\RelationManagers;
 use App\Models\Transaction;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class TransactionResource extends Resource
+class TransactionsWidget extends BaseWidget
 {
-    // protected static ?string $model = Transaction::query->where('user_id', '=', auth()->user()->id);
-
-    protected static ?string $navigationIcon = 'heroicon-o-numbered-list';
-
-    protected static ?string $navigationGroup = 'Wallet';
-
-    protected static ?int $navigationSort = 1;
-
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                //
-            ]);
-    }
-
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         // dd(Transaction::query()->where('id', auth()->user()->id));
         return $table
@@ -75,21 +52,5 @@ class TransactionResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListTransactions::route('/'),
-            'create' => Pages\CreateTransaction::route('/create'),
-            'edit' => Pages\EditTransaction::route('/{record}/edit'),
-        ];
     }
 }
