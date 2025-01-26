@@ -4,5 +4,9 @@
 @tailwind variants;
 
 .fi-sidebar {
-    @apply bg-gray-200 dark:bg-gray-950;
+    @apply bg-black !text-white dark:bg-gray-950;
+}
+
+.fi-sidebar-item-label {
+    @apply text-cyan-400 dark:text-gray-300;
 }
