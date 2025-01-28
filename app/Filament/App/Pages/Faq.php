@@ -14,6 +14,6 @@ class Faq extends Page
 
     protected static ?string $title = 'Frequent Asked Questions';
 
-    protected static ?int $navigationSort = 7;
+    protected static ?int $navigationSort = 10;
     protected static ?string $navigationGroup = 'Services';
 }

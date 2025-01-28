@@ -21,7 +21,7 @@ class BuyAirtime extends Page implements HasForms
     protected static ?string $navigationIcon = 'heroicon-o-phone-arrow-down-left';
 
     protected static string $view = 'filament.app.pages.buy-airtime';
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 1;
     protected static ?string $navigationGroup = 'Services';
 
     public ?string $network = null;

@@ -11,8 +11,8 @@ class AirtimeCash extends Page
     protected static string $view = 'filament.app.pages.airtime-cash';
 
     protected static ?string $title = "Convert Airtime to Cash";
-    protected static ?string $navigationLabel = 'Airtime to Cash';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationLabel = 'Airtime 2 Cash';
+    protected static ?int $navigationSort = 3;
     protected static ?string $navigationGroup = 'Services';
 
 

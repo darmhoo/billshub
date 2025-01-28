@@ -1,4 +1,20 @@
 <x-filament-panels::page>
+    <div class="grid grid-cols-4 gap-4 sm:px-20">
+        <div class="rounded-full">
+            <img src="/images/mtn.jpg" alt="img" width="50px" height="50px" class="w-full max-h-[100%] rounded-full">
+        </div>
+        <div>
+            <img src="/images/airtel.png" alt="img" width="50px" height="50px" class="w-full max-h-[95%] rounded-full">
+        </div>
+        <div>
+            <img src="/images/glo.jpg" alt="img" width="50px" height="50px" class="w-full rounded-full">
+
+        </div>
+        <div>
+            <img src="/images/9mobile.jpg" alt="img" width="50px" height="50px" class="w-full rounded-full">
+
+        </div>
+    </div>
     <div class="sm:flex w-full sm:gap-5">
         <div class="sm:w-3/5">
             <form wire:submit="save">

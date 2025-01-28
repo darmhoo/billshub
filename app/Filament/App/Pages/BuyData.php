@@ -20,7 +20,7 @@ class BuyData extends Page
 
     protected static string $view = 'filament.app.pages.buy-data';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $navigationGroup = 'Services';
 

@@ -41,7 +41,7 @@
 
     </div>
     <div class="max-w-md bg-purple-100  rounded-xl shadow-md overflow-hidden p-3">
-        <a href="electricity">
+        <a href="airtime-cash">
             <div class=" justify-between items-center">
                 <div class="flex justify-center items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -78,7 +78,7 @@
     </div>
 
     <div class="max-w-md bg-orange-200 rounded-xl shadow-md overflow-hidden p-3">
-        <a href="buy-data">
+        <a href="cable-tv">
             <div class=" justify-between items-center">
                 <div class="flex justify-center items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -100,7 +100,7 @@
 
 
     <div class="max-w-md bg-gray-100 rounded-xl shadow-md overflow-hidden p-3 ">
-        <a href="buy-exam">
+        <a href="buy-exam-voucher">
             <div class=" justify-between items-center">
                 <div class="flex justify-center items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -114,6 +114,69 @@
                 </div>
                 <div class=" p-3 text-gray-900  text-center">
                     Buy Exam Vouchers
+                </div>
+            </div>
+        </a>
+
+    </div>
+    <div class="max-w-md bg-yellow-300 rounded-xl shadow-md overflow-hidden p-3 ">
+        <a href="bulk-sms">
+            <div class=" justify-between items-center">
+                <div class="flex justify-center items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-16">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+                    </svg>
+
+
+
+
+                </div>
+                <div class=" p-3 text-gray-900  text-center">
+                    Bulk SMS
+                </div>
+            </div>
+        </a>
+
+    </div>
+    <div class="max-w-md bg-fuchsia-300 rounded-xl shadow-md overflow-hidden p-3 ">
+        <a href="nin-services">
+            <div class=" justify-between items-center">
+                <div class="flex justify-center items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-16 text-blue-950">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
+                    </svg>
+
+
+
+
+                </div>
+                <div class=" p-3 text-gray-900  text-center">
+                    NIN Services
+                </div>
+            </div>
+        </a>
+
+    </div>
+    <div class="max-w-md bg-rose-300 rounded-xl shadow-md overflow-hidden p-3 ">
+        <a href="bvn-services">
+            <div class=" justify-between items-center">
+                <div class="flex justify-center items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-16 text-purple-950">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                    </svg>
+
+
+
+
+                </div>
+                <div class=" p-3 text-gray-900  text-center">
+                    BVN Services
                 </div>
             </div>
         </a>
