@@ -56,6 +56,9 @@ class RegisterUser extends BaseRegister
 
         $user = $this->getUserModel()::create($data);
 
+        $user->account_type_id = 1;
+        $user->save();
+
         CreateUser::createWallet($user);
 
         app()->bind(

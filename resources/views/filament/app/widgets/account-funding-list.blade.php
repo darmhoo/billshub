@@ -113,7 +113,7 @@
 
                 </div>
                 <div class=" p-3 text-gray-900  text-center">
-                    Buy Exam Vouchers
+                    Exam Cards
                 </div>
             </div>
         </a>

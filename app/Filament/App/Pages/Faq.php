@@ -3,6 +3,7 @@
 namespace App\Filament\App\Pages;
 
 use Filament\Pages\Page;
+use App\Models\Faq as FaqModel;
 
 class Faq extends Page
 {
@@ -16,4 +17,14 @@ class Faq extends Page
 
     protected static ?int $navigationSort = 10;
     protected static ?string $navigationGroup = 'Services';
+
+    protected function getViewData(): array
+    {
+        $faqs = FaqModel::query()->get();
+        // dd($user);
+        return [
+            'faqs' => $faqs
+        ];
+    }
+
 }

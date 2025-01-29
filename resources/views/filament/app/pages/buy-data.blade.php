@@ -26,23 +26,32 @@
 
         </div>
 
-        <div class="px-10 py-5 sm:w-2/5">
-            <h3>Data Balance code</h3>
+        <div class="sm:px-10 px-3 py-5 sm:w-2/5">
+            <h3 class="font-bold my-2">Data Balance code: </h3>
             <ul class="flex flex-col gap-5">
-                <li>
-                    🟡MTN (SME): *461*4#
+                <li class="flex justify-normal items-center gap-2">
+                    <img src="/images/mtn.jpg" width="40px" height="40px" alt="" class="rounded-full">
+                    <div>
+                        <div>SME: *461*4#</div>
+                        <div>CG or GIFTING: *460*260# / *323#</div>
+                    </div>
                 </li>
-                <li>
-                    🟢GLO (CG / GIFTING): *323#
+                <li class="flex justify-normal items-center gap-2">
+                    <img src="/images/airtel.png" width="40px" height="40px" alt="" class="rounded-full">
+
+                    CG or GIFTING: *323#
                 </li>
-                <li>
-                    🟡MTN (CG / GIFTING): *460*260# / *323*4#
+                <li class="flex justify-normal items-center gap-2">
+                    <img src="/images/glo.jpg" width="40px" height="40px" alt="" class="rounded-full">
+
+                    CG or GIFTING: *323#
                 </li>
-                <li>
-                    🔴AIRTEL (CG / GIFTING): *323#
-                </li>
-                <li>
-                    🟢9MOBILE: *323#
+
+
+                <li class="flex justify-normal items-center gap-2">
+                    <img src="/images/9mobile.jpg" width="40px" height="40px" alt="" class="rounded-full">
+
+                    CG or GIFTING: *323#
                 </li>
             </ul>
         </div>

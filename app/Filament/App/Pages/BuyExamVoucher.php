@@ -13,5 +13,6 @@ class BuyExamVoucher extends Page
     protected static ?int $navigationSort = 6;
 
     protected static ?string $navigationGroup = 'Services';
+    protected static ?string $navigationLabel = 'Exam Cards';
 
 }

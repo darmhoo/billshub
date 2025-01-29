@@ -30,7 +30,7 @@
             </div>
             <div>
                 2️⃣. MANUAL FUNDING 🔁 @ #0 FEE: Minimum is #2,000 & #200,000 maximum. Transfer to MONIEPOINT:
-                5442693497 [Hephzi-gee Solutions/Billshub.ng]. ℹ️Use your Username as narration if possible & send proof
+                5442693497 [Hephzi-gee Solutions/Gbills247]. ℹ️Use your Username as narration if possible & send proof
                 of payment to WhatsApp: 08034905635. "Your wallet will be funded upon confirmation"
             </div>
             <div>

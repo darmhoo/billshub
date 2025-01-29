@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>BillsHub</title>
+    <title>Gbills247</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -908,7 +908,7 @@
 
 <body class="font-sans antialiased">
     <div class="flex justify-between">
-        <h1 class="text-red-700">BillsHub.ng</h1>
+        <h1 class="text-red-700">Gbills247</h1>
         <nav class="flex">
             <div>Home</div>
             <div>About</div>
