@@ -5,6 +5,7 @@ namespace App\Filament\App\Pages;
 use App\Filament\App\Widgets\AccountFundingList;
 use App\Filament\App\Widgets\StatsOverview;
 use App\Filament\App\Widgets\TransactionsWidget;
+use App\Filament\App\Widgets\WalletOverview;
 use Filament\Actions\Action;
 use Filament\Pages\Page;
 use Filament\Support\Enums\Alignment;
@@ -39,7 +40,7 @@ class Dashboard extends Page
 
     protected function getHeaderWidgets(): array
     {
-        return [StatsOverview::class, AccountFundingList::class, TransactionsWidget::class];
+        return [WalletOverview::class, AccountFundingList::class, TransactionsWidget::class];
     }
 
     public function getHeaderWidgetsColumns(): array|int|string

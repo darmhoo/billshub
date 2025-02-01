@@ -1,7 +1,6 @@
-<x-filament-panels::page>
+<x-filament-panels::page class="bg-gray-100 p-5">
     <div class="flex flex-col gap-5 my-3">
         @foreach ($faqs as $faq)
-            <hr class="w-full lg:mt-10 md:mt-12 md:mb-8 my-8" />
 
             <div class="w-full md:px-6">
                 <div id="mainHeading" class="flex justify-between items-center w-full">
