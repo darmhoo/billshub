@@ -16,8 +16,8 @@
             </div>
             <div class="flex flex-col gap-5 justify-center items-center">
                 <div>
-                    <h1 class="text-md font-bold capitalize">{{$user->accountType->name}}</h1>
-                   
+                    <h1 class="text-md font-bold capitalize">{{$user->accountType->name ?? 'N/A'}}</h1>
+
 
                 </div>
                 <div>
