@@ -21,16 +21,18 @@
 
                 </div>
                 <div>
-                    @if ($user->accountType->slug == 'reseller_premium')
-                        <button class="bg-green-500 text-white p-2 rounded-lg">
-                            Hurrah! You are a premium user
-                        </button>
+                    @if ($user->accountType)
+                        @if($user->accountType->slug == 'reseller_premium')
+                            <button class="bg-green-500 text-white p-2 rounded-lg">
+                                Hurrah! You are a premium user
+                            </button>
 
-                    @else
-                        <button class="bg-yellow-500 text-white p-2 rounded-lg text-sm">
-                            Upgrade Account
-                        </button>
+                        @else
+                            <button class="bg-yellow-500 text-white p-2 rounded-lg text-sm">
+                                Upgrade Account
+                            </button>
 
+                        @endif
                     @endif
 
                 </div>
