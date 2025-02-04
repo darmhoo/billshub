@@ -1,8 +1,8 @@
 <footer
-    class="fixed bottom-0 left-0 z-20 w-full p-4 bg-transparent border-t border-gray-200 shadow md:flex md:items-center md:justify-end md:p-6 dark:bg-transparent dark:border-gray-600 ">
+    class="fixed bottom-0 left-0 z-20 p-4 bg-transparent border-gray-200 shadow md:flex md:items-center md:justify-end md:p-6 dark:bg-transparent  ">
     <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400 ">
         <a href="
-https://api.whatsapp.com/send?phone=2348034905635&text=Hi,%20Gbills247%20Support,
+https://api.whatsapp.com/send?phone=2348034905635&text=Hi,%20Gbills247%20Support.
                     ">
             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 48 48">
                 <path fill="#fff"
@@ -21,7 +21,8 @@ https://api.whatsapp.com/send?phone=2348034905635&text=Hi,%20Gbills247%20Support
                     d="M19.3,16c-0.4-0.8-0.7-0.8-1.1-0.8c-0.3,0-0.6,0-0.9,0	s-0.8,0.1-1.3,0.6c-0.4,0.5-1.7,1.6-1.7,4s1.7,4.6,1.9,4.9s3.3,5.3,8.1,7.2c4,1.6,4.8,1.3,5.7,1.2c0.9-0.1,2.8-1.1,3.2-2.3	c0.4-1.1,0.4-2.1,0.3-2.3c-0.1-0.2-0.4-0.3-0.9-0.6s-2.8-1.4-3.2-1.5c-0.4-0.2-0.8-0.2-1.1,0.2c-0.3,0.5-1.2,1.5-1.5,1.9	c-0.3,0.3-0.6,0.4-1,0.1c-0.5-0.2-2-0.7-3.8-2.4c-1.4-1.3-2.4-2.8-2.6-3.3c-0.3-0.5,0-0.7,0.2-1c0.2-0.2,0.5-0.6,0.7-0.8	c0.2-0.3,0.3-0.5,0.5-0.8c0.2-0.3,0.1-0.6,0-0.8C20.6,19.3,19.7,17,19.3,16z"
                     clip-rule="evenodd"></path>
             </svg>
-            <span class="text-xs">Chat us on WhatsApp</span>
         </a>
+        <span class="text-">Chat us on WhatsApp</span>
+
     </span>
 </footer>
