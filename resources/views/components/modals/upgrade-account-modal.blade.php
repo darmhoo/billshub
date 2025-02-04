@@ -1,10 +1,5 @@
-<x-filament::modal id="upgrade-account-modal">
-    {{-- Modal trigger --}}
-    <x-slot name="trigger">
-        <x-filament::button>
-            Open modal
-        </x-filament::button>
-    </x-slot>
+<x-filament::modal id="upgrade-account">
 
     {{-- Modal content --}}
+    <p>Upgrade Account</p>
 </x-filament::modal>

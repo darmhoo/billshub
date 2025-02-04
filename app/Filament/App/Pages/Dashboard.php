@@ -7,6 +7,7 @@ use App\Filament\App\Widgets\StatsOverview;
 use App\Filament\App\Widgets\TransactionsWidget;
 use App\Filament\App\Widgets\WalletOverview;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
 use Filament\Pages\Page;
 use Filament\Support\Enums\Alignment;
 
@@ -47,5 +48,23 @@ class Dashboard extends Page
     {
         return 1;
     }
+
+    public function upgradeAccountAction()
+    {
+        // dd('i am here');
+        return Action::make('upgradeAccount')
+            ->form([
+                Select::make('plan')
+                    ->options([
+                        'basic' => 'Basic',
+                        'premium' => 'Premium',
+                        'enterprise' => 'Enterprise',
+                    ])
+                    ->required()
+                    ->default('basic'),
+            ]);
+    }
+
+
 
 }
