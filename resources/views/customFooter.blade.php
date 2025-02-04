@@ -1,8 +1,8 @@
 <footer
-    class="fixed bottom-0 left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-end md:p-6 dark:bg-gray-800 dark:border-gray-600 ">
+    class="fixed bottom-0 left-0 z-20 w-full p-4 bg-transparent border-t border-gray-200 shadow md:flex md:items-center md:justify-end md:p-6 dark:bg-transparent dark:border-gray-600 ">
     <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400 ">
         <a href="
-https://api.whatsapp.com/send?phone=2348034905635&text=Hi%20Gbills247%20Support,
+https://api.whatsapp.com/send?phone=2348034905635&text=Hi,%20Gbills247%20Support,
                     ">
             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 48 48">
                 <path fill="#fff"
