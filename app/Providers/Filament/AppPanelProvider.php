@@ -39,6 +39,7 @@ class AppPanelProvider extends PanelProvider
             ->colors([
                 'primary' => '#674CC4',
             ])
+            ->renderHook('panels::body.end', fn() => view('customFooter'))
             ->navigationGroups([
                 'Wallet',
                 'Services',

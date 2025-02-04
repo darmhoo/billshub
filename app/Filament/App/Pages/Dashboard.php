@@ -6,6 +6,7 @@ use App\Filament\App\Widgets\AccountFundingList;
 use App\Filament\App\Widgets\StatsOverview;
 use App\Filament\App\Widgets\TransactionsWidget;
 use App\Filament\App\Widgets\WalletOverview;
+use App\Models\OnboardingMessage;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Pages\Page;
@@ -47,6 +48,22 @@ class Dashboard extends Page
     public function getHeaderWidgetsColumns(): array|int|string
     {
         return 1;
+    }
+
+    public function onboardingAction()
+    {
+        $notification = OnboardingMessage::where('is_active', true)->first();
+
+        return Action::make('onboarding')
+            ->modalHeading($notification->title ?? '')
+            ->modalDescription($notification->content ?? '')
+            ->disabledForm()
+            ->modalSubmitAction(false)
+            ->modalCancelAction(false)
+            ->modalAlignment(Alignment::Center)
+            ->visible($notification !== null);
+
+
     }
 
     public function upgradeAccountAction()
