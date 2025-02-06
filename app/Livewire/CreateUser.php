@@ -46,7 +46,7 @@ class CreateUser extends Component
                     'accountReference' => 'ref-' . Str::random(8),
                     'accountName' => $user->name . '-gbills',
                     'currencyCode' => 'NGN',
-                    'contractCode' => '9117040590',
+                    'contractCode' => '119688125155',
                     'customerName' => $user->name,
                     'bvn' => '22182596999',
                     'getAllAvailableBanks' => true,
