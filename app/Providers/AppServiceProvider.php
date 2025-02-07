@@ -2,11 +2,16 @@
 
 namespace App\Providers;
 
+use App\Policies\PermissionPolicy;
+use App\Policies\RolePolicy;
+use Gate;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -34,5 +39,13 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('production')) {
             URL::forceScheme('https');
         }
+        Gate::policy(Role::class, RolePolicy::class);
+        Gate::policy(Permission::class, PermissionPolicy::class);
+        
+        Gate::before(function ($user, $ability) {
+            if ($user->hasRole('super-admin')) {
+                return true;
+            }
+        });
     }
 }

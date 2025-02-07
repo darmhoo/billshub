@@ -60,6 +60,18 @@
         <x-filament::section>
             {{-- Widget content --}}
             <div>Notifications</div>
+            @if (count($notifications) == 0)
+                <div>
+                    No notifications
+                </div>
+            @else
+                @foreach ($notifications as $notification)
+                    <div>
+                        {{$notification->message}}
+                    </div>
+                @endforeach
+            @endif
+
         </x-filament::section>
     </div>
 

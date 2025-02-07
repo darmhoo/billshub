@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\AccountTypeResource\Pages;
-use App\Filament\Resources\AccountTypeResource\RelationManagers;
-use App\Models\AccountType;
+use App\Filament\Resources\AdminResource\Pages;
+use App\Filament\Resources\AdminResource\RelationManagers;
+use App\Models\Admin;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,43 +14,34 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class AccountTypeResource extends Resource
+class AdminResource extends Resource
 {
-    protected static ?string $model = AccountType::class;
+    protected static ?string $model = Admin::class;
     protected static ?string $navigationGroup = 'User Management';
 
 
-    protected static ?string $navigationIcon = 'heroicon-o-sparkles';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('slug')
-                    ->required()
-                    ->maxLength(255),
+                //
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->query(User::query()->role('admin'))
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
+                    Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    Tables\Columns\ToggleColumn::make('is_active')
+                    ,
+                //
             ])
             ->filters([
                 //
@@ -74,9 +66,9 @@ class AccountTypeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAccountTypes::route('/'),
-            'create' => Pages\CreateAccountType::route('/create'),
-            'edit' => Pages\EditAccountType::route('/{record}/edit'),
+            'index' => Pages\ListAdmins::route('/'),
+            'create' => Pages\CreateAdmin::route('/create'),
+            'edit' => Pages\EditAdmin::route('/{record}/edit'),
         ];
     }
 }

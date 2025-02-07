@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\AccountTypeResource\Pages;
-use App\Filament\Resources\AccountTypeResource\RelationManagers;
-use App\Models\AccountType;
+use App\Filament\Resources\NotificationResource\Pages;
+use App\Filament\Resources\NotificationResource\RelationManagers;
+use App\Models\Notification;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,24 +13,26 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class AccountTypeResource extends Resource
+class NotificationResource extends Resource
 {
-    protected static ?string $model = AccountType::class;
-    protected static ?string $navigationGroup = 'User Management';
+    protected static ?string $model = Notification::class;
+    protected static ?string $navigationGroup = 'Notifications';
 
 
-    protected static ?string $navigationIcon = 'heroicon-o-sparkles';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('slug')
+                Forms\Components\Textarea::make('message')
                     ->required()
-                    ->maxLength(255),
+                    ->columnSpanFull(),
+                Forms\Components\Toggle::make('is_active')
+                    ->required(),
             ]);
     }
 
@@ -38,10 +40,10 @@ class AccountTypeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
+                Tables\Columns\ToggleColumn::make('is_active')
+                ,
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -74,9 +76,9 @@ class AccountTypeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAccountTypes::route('/'),
-            'create' => Pages\CreateAccountType::route('/create'),
-            'edit' => Pages\EditAccountType::route('/{record}/edit'),
+            'index' => Pages\ListNotifications::route('/'),
+            'create' => Pages\CreateNotification::route('/create'),
+            'edit' => Pages\EditNotification::route('/{record}/edit'),
         ];
     }
 }
