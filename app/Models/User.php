@@ -13,12 +13,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 use Stephenjude\Wallet\Traits\HasWallet;
 
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasWallet;
+    use HasFactory, Notifiable, HasWallet, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -58,7 +59,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {
-            return $this->role === 'admin';
+            return $this->hasRole(['admin', 'super-admin']);
         }
 
         return true;

@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class AutomationResource extends Resource
 {
     protected static ?string $model = Automation::class;
+    protected static ?string $navigationGroup = 'External Services';
+
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
 
@@ -60,8 +62,8 @@ class AutomationResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('base_url')
                     ->searchable(),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
+                Tables\Columns\ToggleColumn::make('is_active')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('secret_key')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('public_key')

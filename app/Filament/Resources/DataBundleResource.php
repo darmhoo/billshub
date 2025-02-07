@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class DataBundleResource extends Resource
 {
     protected static ?string $model = DataBundle::class;
+    protected static ?string $navigationGroup = 'Data';
+
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -73,11 +75,11 @@ class DataBundleResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price')
                     ->numeric()
+                    ->prefix('₦')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('plan_id')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
+
+                Tables\Columns\ToggleColumn::make('is_active')
+                ,
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

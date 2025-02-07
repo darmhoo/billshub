@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class AirtimeBundleResource extends Resource
 {
     protected static ?string $model = AirtimeBundle::class;
+    protected static ?string $navigationGroup = 'Airtime';
+
 
     protected static ?string $navigationIcon = 'heroicon-o-phone';
 
@@ -65,10 +67,9 @@ class AirtimeBundleResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('discount')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('plan_id')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
+
+                Tables\Columns\ToggleColumn::make('is_active')
+                ,
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

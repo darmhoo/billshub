@@ -3,6 +3,7 @@
 namespace App\Filament\App\Widgets;
 
 use App\Models\AccountType;
+use App\Models\Notification;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -23,6 +24,7 @@ class WalletOverview extends Widget implements HasForms, HasActions
     {
         return [
             'user' => auth()->user(),
+            'notifications' => Notification::query()->where('is_active', true)->get()
         ];
     }
 

@@ -17,6 +17,9 @@ class OnboardingMessageResource extends Resource
 {
     protected static ?string $model = OnboardingMessage::class;
 
+    protected static ?string $navigationGroup = 'Notifications';
+
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
@@ -40,8 +43,8 @@ class OnboardingMessageResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
+                Tables\Columns\ToggleColumn::make('is_active')
+                ,
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
