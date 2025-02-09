@@ -5,6 +5,7 @@ namespace App\Filament\App\Widgets;
 use App\Models\Transaction;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\ActionsPosition;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Model;
@@ -27,11 +28,15 @@ class TransactionsWidget extends BaseWidget
             ->emptyStateHeading('No Transactions Yet')
             ->columns([
                 //
-                TextColumn::make('id'),
-                TextColumn::make('transaction_type')->searchable(),
+                TextColumn::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable(),
+                TextColumn::make('reference')->searchable(),
+
+                TextColumn::make('phone_number')->searchable()->label('Phone'),
+                TextColumn::make('network')->formatStateUsing(fn(string $state): string => strtoupper($state))->searchable(),
                 TextColumn::make('price')->money('NGN')->label('Amount'),
-                TextColumn::make('amount_before')->money('NGN')->label('Balance Before'),
-                TextColumn::make('amount_after')->money('NGN')->label('Balance After'),
+
+                TextColumn::make('amount_before')->money('NGN')->label('Bal Before'),
+                TextColumn::make('amount_after')->money('NGN')->label('Bal After'),
                 TextColumn::make('status')->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'completed' => 'success',
@@ -45,12 +50,7 @@ class TransactionsWidget extends BaseWidget
                 //
             ])
             ->actions([
-                // Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+                Tables\Actions\ViewAction::make(),
+            ], position: ActionsPosition::BeforeCells);
     }
 }

@@ -13,11 +13,14 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Spatie\Permission\Models\Permission;
 
 class AdminResource extends Resource
 {
-    protected static ?string $model = Admin::class;
+    protected static ?string $model = User::class;
     protected static ?string $navigationGroup = 'User Management';
+    protected static ?string $navigationLabel = 'Admin';
+
 
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -26,6 +29,27 @@ class AdminResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('password')
+                    ->password()
+                    ->required()
+                    ->revealable(),
+                Forms\Components\Toggle::make('is_active'),
+                Forms\Components\TextInput::make('phone_number')
+                    ->required()
+                    ->length(11)
+                    ->numeric(),
+                Forms\Components\Select::make('permissions')
+                    ->multiple()
+                    ->options(Permission::all()->pluck('name', 'id'))
+                    ->searchable()
+
                 //
             ]);
     }
@@ -37,16 +61,17 @@ class AdminResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                    Tables\Columns\TextColumn::make('email')
+                Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                    Tables\Columns\ToggleColumn::make('is_active')
-                    ,
+                Tables\Columns\ToggleColumn::make('is_active')
+                ,
                 //
             ])
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

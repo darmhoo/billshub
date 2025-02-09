@@ -9,4 +9,8 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateAccountType extends CreateRecord
 {
     protected static string $resource = AccountTypeResource::class;
+    protected function getRedirectUrl(): string
+    {
+        return $this->previousUrl ?? $this->getResource()::getUrl('index');
+    }
 }

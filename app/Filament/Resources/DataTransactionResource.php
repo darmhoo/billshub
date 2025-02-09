@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DataTransactionResource\Pages;
 use App\Filament\Resources\DataTransactionResource\RelationManagers;
 use App\Models\DataTransaction;
+use App\Models\Transaction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,8 +16,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class DataTransactionResource extends Resource
 {
-    protected static ?string $model = DataTransaction::class;
+    protected static ?string $model = Transaction::class;
     protected static ?string $navigationGroup = 'Data';
+
+    protected static ?string $navigationLabel = 'Data Transactions';
+
 
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -32,6 +36,8 @@ class DataTransactionResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(Transaction::query()->where('transaction_type', 'data'))
+
             ->columns([
                 //
             ])

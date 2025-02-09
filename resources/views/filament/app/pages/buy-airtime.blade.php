@@ -19,7 +19,9 @@
         <form wire:submit="save">
             {{$this->form}}
             <div class="my-5">
-                <button type="submit" class="p-3 bg-green-300 text-green-950 rounded-lg w-full">submit</button>
+                <x-filament::button wire:click="save" class="p-3 bg-green-300 text-green-950 rounded-lg w-full">
+                    Submit
+                </x-filament::button>
             </div>
         </form>
 

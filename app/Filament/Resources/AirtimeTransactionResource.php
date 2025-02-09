@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\AirtimeTransactionResource\Pages;
 use App\Filament\Resources\AirtimeTransactionResource\RelationManagers;
 use App\Models\AirtimeTransaction;
+use App\Models\Transaction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,7 +16,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class AirtimeTransactionResource extends Resource
 {
-    protected static ?string $model = AirtimeTransaction::class;
+    // protected static ?string $model = AirtimeTransaction::class;
+    protected static ?string $model = Transaction::class;
+
+    protected static ?string $navigationLabel = 'Airtime Transactions';
+    
+
+
     protected static ?string $navigationGroup = 'Airtime';
 
 
@@ -32,6 +39,7 @@ class AirtimeTransactionResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(Transaction::query()->where('transaction_type', 'airtime'))
             ->columns([
                 //
             ])

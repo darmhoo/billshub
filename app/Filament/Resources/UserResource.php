@@ -32,10 +32,6 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255),
-
-
-                Forms\Components\TextInput::make('role')
-                    ->required(),
                 Forms\Components\TextInput::make('phone_number')
                     ->tel()
                     ->maxLength(255)

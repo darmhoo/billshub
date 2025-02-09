@@ -7,10 +7,14 @@ use App\Filament\App\Resources\TransactionResource\RelationManagers;
 use App\Models\Transaction;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\ActionsPosition;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +23,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class TransactionResource extends Resource
 {
     // protected static ?string $model = Transaction::query->where('user_id', '=', auth()->user()->id);
+    protected static ?string $model = Transaction::class;
+
 
     protected static ?string $navigationIcon = 'heroicon-o-numbered-list';
 
@@ -50,11 +56,15 @@ class TransactionResource extends Resource
             ->emptyStateHeading('No Transactions Yet')
             ->columns([
                 //
-                TextColumn::make('id'),
-                TextColumn::make('transaction_type')->searchable(),
+                TextColumn::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable(),
+                TextColumn::make('reference')->searchable(),
+
+                TextColumn::make('phone_number')->searchable()->label('Phone'),
+                TextColumn::make('network')->formatStateUsing(fn(string $state): string => strtoupper($state))->searchable(),
                 TextColumn::make('price')->money('NGN')->label('Amount'),
-                TextColumn::make('amount_before')->money('NGN')->label('Balance Before'),
-                TextColumn::make('amount_after')->money('NGN')->label('Balance After'),
+
+                TextColumn::make('amount_before')->money('NGN')->label('Bal Before'),
+                TextColumn::make('amount_after')->money('NGN')->label('Bal After'),
                 TextColumn::make('status')->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'completed' => 'success',
@@ -68,13 +78,9 @@ class TransactionResource extends Resource
                 //
             ])
             ->actions([
-                // Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+                Tables\Actions\ViewAction::make(),
+            ], position: ActionsPosition::BeforeCells);
+
     }
 
     public static function getRelations(): array
@@ -84,12 +90,42 @@ class TransactionResource extends Resource
         ];
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('Media')
+                    ->columns(2)
+                    ->schema([
+                        Infolists\Components\TextEntry::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state)),
+                        Infolists\Components\TextEntry::make('reference'),
+                        Infolists\Components\TextEntry::make('phone_number'),
+                        Infolists\Components\TextEntry::make('network')->formatStateUsing(fn(string $state): string => strtoupper($state)),
+                        Infolists\Components\TextEntry::make('price')->label('Amount')->money('NGN'),
+                        Infolists\Components\TextEntry::make('amount_before')->label('Bal Before')->money('NGN'),
+                        Infolists\Components\TextEntry::make('amount_after')->label('Bal After')->money('NGN'),
+                        Infolists\Components\TextEntry::make('status')->badge()
+                            ->color(fn(string $state): string => match ($state) {
+                                'completed' => 'success',
+                                'pending' => 'warning',
+                                'failed' => 'danger',
+                                default => 'primary',
+                            }),
+                        Infolists\Components\TextEntry::make('api_message')->label('API Response'),
+                        Infolists\Components\TextEntry::make('created_at')->dateTime(),
+                    ]),
+
+
+
+            ]);
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListTransactions::route('/'),
             'create' => Pages\CreateTransaction::route('/create'),
-            'edit' => Pages\EditTransaction::route('/{record}/edit'),
+            // 'edit' => Pages\EditTransaction::route('/{record}/edit'),
         ];
     }
 }

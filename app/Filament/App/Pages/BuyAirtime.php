@@ -3,8 +3,12 @@
 namespace App\Filament\App\Pages;
 
 use App\Models\AirtimeBundle;
+use App\Models\Automation;
 use App\Models\Network;
 use App\Models\User;
+use App\Services\AirtimeService\AutoPilot;
+use App\Services\AirtimeService\VTPass;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Contracts\HasForms;
@@ -46,6 +50,7 @@ class BuyAirtime extends Page implements HasForms
                         $discount = AirtimeBundle::query()
                             ->where('network_id', $state)
                             ->where('account_type_id', auth()->user()->account_type_id)
+                            ->where('is_active', 'active')
                             ->first();
                         // dd($discount);
                         if ($discount) {
@@ -88,15 +93,105 @@ class BuyAirtime extends Page implements HasForms
                     ->required()
                     ->regex('(^0)(7|8|9){1}(0|1){1}[0–9]{8})')
                     ->placeholder('08026201234')
-                    ->length(11)
+                    ->length(11),
 
             ])
             ->columns(2)
+
         ;
     }
     public function save(Request $request)
     {
-        $this->validate([], []);
+        $discount = AirtimeBundle::query()
+            ->where('network_id', $this->network)
+            ->where('account_type_id', auth()->user()->account_type_id)
+            ->first();
+        $real = $discount ? $this->amountToPurchase - ($discount->discount * $this->amountToPurchase / 100) : $this->amountToPurchase;
+        if (auth()->user()->balance < $real) {
+            Notification::make()
+                ->title('Insufficient balance')
+                ->danger()
+                ->send();
+            return;
+        }
+        $automation = $discount->automation;
+        if ($automation->name === 'autopilot') {
+            $autopilot = new AutoPilot($automation);
+            $res = $autopilot->sendAirtime($this->phoneNumber, $this->amountToPurchase, $this->network, );
+            if ($res['status'] === true) {
+                auth()->user()->withdraw($real);
+                $transaction = auth()->user()->transaction()->create([
+                    'price' => $real,
+                    'transaction_type' => 'airtime',
+                    'status' => 'completed',
+                    'reference' => $res['data']['reference'],
+                    'amount_before' => auth()->user()->balance + $real,
+                    'amount_after' => auth()->user()->balance,
+                    'api_message' => $res['data']['message'],
+                    'network' => Network::where('id', $this->network)->first()->name,
+                    'phone_number' => $this->phoneNumber,
+                ]);
+                Notification::make()
+                    ->title('Airtime purchased successfully')
+                    ->success()
+                    ->send();
+            } else {
+                $transaction = auth()->user()->transaction()->create([
+                    'price' => $real,
+                    'transaction_type' => 'airtime',
+                    'status' => 'failed',
+                    'reference' => $res['data']['reference'] ?? '',
+                    'amount_before' => auth()->user()->balance,
+                    'amount_after' => auth()->user()->balance,
+                    'api_message' => $res['data']['message'],
+                    'network' => Network::where('id', $this->network)->first()->name,
+                    'phone_number' => $this->phoneNumber,
+                ]);
+                Notification::make()
+                    ->title('Airtime purchase failed')
+                    ->danger()
+                    ->send();
+            }
+        }
+        if ($automation->name === 'VTPASS') {
+            $vtpass = new VTPass($automation);
+            $res = $vtpass->sendAirtime($this->phoneNumber, $this->amountToPurchase, $this->network, );
+            // dd($res);
+            if ($res['content']['transactions']['status'] === true) {
+                auth()->user()->withdraw($real);
+                $transaction = auth()->user()->transaction()->create([
+                    'price' => $real,
+                    'transaction_type' => 'airtime',
+                    'status' => 'completed',
+                    'reference' => $res['data']['request_id'],
+                    'amount_before' => auth()->user()->balance + $real,
+                    'amount_after' => auth()->user()->balance,
+                    'api_message' => $res['data']['message'],
+                    'network' => Network::where('id', $this->network)->first()->name,
+                    'phone_number' => $this->phoneNumber,
+                ]);
+                Notification::make()
+                    ->title('Airtime purchased successfully')
+                    ->success()
+                    ->send();
+            } else {
+                $transaction = auth()->user()->transaction()->create([
+                    'price' => $real,
+                    'transaction_type' => 'airtime',
+                    'status' => 'failed',
+                    'reference' => $res['requestId'] ?? '',
+                    'amount_before' => auth()->user()->balance,
+                    'amount_after' => auth()->user()->balance,
+                    'api_message' => $res['response_description'],
+                    'network' => Network::where('id', $this->network)->first()->name,
+                    'phone_number' => $this->phoneNumber,
+                ]);
+                Notification::make()
+                    ->title('Airtime purchase failed')
+                    ->danger()
+                    ->send();
+            }
+        }
 
         //Todo wallet check
 
@@ -105,6 +200,7 @@ class BuyAirtime extends Page implements HasForms
         //Todo Log transaction
 
     }
+
 
     protected function onValidationError(\Illuminate\Validation\ValidationException $exception): void
     {
