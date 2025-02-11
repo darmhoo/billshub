@@ -34,7 +34,7 @@ class AppPanelProvider extends PanelProvider
             ->registration(RegisterUser::class)
             ->emailVerification()
             ->passwordReset()
-            ->profile()
+            ->profile(isSimple: false)
             ->sidebarCollapsibleOnDesktop()
             ->colors([
                 'primary' => '#674CC4',
@@ -44,6 +44,7 @@ class AppPanelProvider extends PanelProvider
                 'Wallet',
                 'Services',
             ])
+            ->authGuard('web')
             ->viteTheme('resources/css/app.css')
             ->font('poppins')
             ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\\Filament\\App\\Resources')

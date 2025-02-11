@@ -15,7 +15,7 @@ return [
 
     'class_namespace' => 'App\\Livewire',
 
-    // 'asset_url' => (request()->isSecure() ? 'https://' : 'http://') . request()->getHttpHost(),
+    'asset_url' => null,
 
     /*
     |---------------------------------------------------------------------------

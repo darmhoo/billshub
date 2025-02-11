@@ -2,7 +2,6 @@
 
 namespace App\Filament\Pages\Auth;
 
-use App\Listeners\CustomSendEmailVerificationNotification;
 use App\Livewire\CreateUser;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Illuminate\Auth\Events\Registered;
@@ -62,11 +61,11 @@ class RegisterUser extends BaseRegister
 
         // CreateUser::createWallet($user);
 
-        app()->bind(
-            SendEmailVerificationNotification::class,
-            CustomSendEmailVerificationNotification::class
+        // app()->bind(
+        //     SendEmailVerificationNotification::class,
+        //     CustomSendEmailVerificationNotification::class
 
-        );
+        // );
         event(new Registered($user));
 
         Filament::auth()->login($user);

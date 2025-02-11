@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
 use Gate;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
@@ -39,6 +41,11 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('production')) {
             URL::forceScheme('https');
         }
+        VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
+            return (new MailMessage)
+                ->subject('Welcome to GBILLS247')
+                ->view('emails.verify-email-custom', ['url' => $url, 'user' => $notifiable]);
+        });
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Permission::class, PermissionPolicy::class);
         

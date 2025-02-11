@@ -75,8 +75,7 @@
             </h1>
             <h3 class="text-center text-xl sm:text-3xl py-10 font-medium">Our Services</h3>
             <div class="grid grid-cols-1 lg:grid-cols-2 sm:grid-cols-2 text-center mx-6 sm:mx-48 gap-x-5 gap-y-5 my-10">
-                <div
-                    class="border border-2 shadow-lg rounded-lg py-20 flex flex-col items-center justify-center bg-yellow-100">
+                <div class="border  shadow-lg rounded-lg py-20 flex flex-col items-center justify-center bg-yellow-100">
                     <div class="mx-auto p-3 hover:bg-slate-400 hover:text-yellow-600">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
@@ -89,8 +88,7 @@
                     <h3 class="text-xl font-bold p-2">Buy Airtime</h3>
                     <p class="text-xs p-2">Get data bundle of any network at a discounted and affordable rate</p>
                 </div>
-                <div
-                    class="border border-2 shadow-lg rounded-lg py-20 flex flex-col items-center justify-center bg-red-100">
+                <div class="border shadow-lg rounded-lg py-20 flex flex-col items-center justify-center bg-red-100">
                     <div class="mx-auto p-3 hover:bg-slate-400 hover:text-red-600">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
@@ -103,8 +101,7 @@
                     <h3 class="text-xl font-bold p-2">Data Bundle</h3>
                     <p class="text-xs p-2">Enjoy huge discount when you purchase airtime.</p>
                 </div>
-                <div
-                    class="border border-2 shadow-lg rounded-lg py-20 flex flex-col items-center justify-center bg-green-100">
+                <div class="border shadow-lg rounded-lg py-20 flex flex-col items-center justify-center bg-green-100">
                     <div class="mx-auto p-3 hover:bg-slate-400 hover:text-green-600">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
@@ -117,8 +114,7 @@
                     <p class="text-xs p-2">Instant recharge of DStv, GOtv, Startimes, e.t.c.</p>
 
                 </div>
-                <div
-                    class="border border-2 shadow-lg rounded-lg py-20 flex flex-col items-center justify-center bg-orange-100">
+                <div class="border shadow-lg rounded-lg py-20 flex flex-col items-center justify-center bg-orange-100">
                     <div class="mx-auto p-3 hover:bg-slate-400 hover:text-orange-600">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
@@ -134,8 +130,7 @@
                     </p>
 
                 </div>
-                <div
-                    class="border border-2 shadow-lg rounded-lg py-20 flex flex-col items-center justify-center bg-purple-100">
+                <div class="border shadow-lg rounded-lg py-20 flex flex-col items-center justify-center bg-purple-100">
                     <div class="mx-auto p-3 hover:bg-slate-400 hover:text-purple-600">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
@@ -154,7 +149,7 @@
 https://api.whatsapp.com/send?phone=2348135321769&text=Hello%20darmhoo,%20I%20saw%20your%20number%20on%20billshub%20website,%20I%20need%20a%20website.
                     ">
                     <div
-                        class="border border-2 shadow-lg rounded-lg py-20 flex flex-col items-center justify-center bg-blue-100">
+                        class="border shadow-lg rounded-lg py-20 flex flex-col items-center justify-center bg-blue-100">
 
                         <div class="mx-auto p-3 hover:bg-slate-400 hover:text-blue-600">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
