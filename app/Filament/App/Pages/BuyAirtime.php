@@ -102,6 +102,11 @@ class BuyAirtime extends Page implements HasForms
                 Actions::make([
                     Action::make('submit')
                         ->requiresConfirmation()
+                        ->modalHeading('Buy Airtime')
+                        ->modalDescription(function (Get $get) {
+                            return 'You are about to send ₦' . $get('amountToPurchase') . ' to ' . $get('phoneNumber');
+                        })
+                        ->modalSubmitActionLabel('Proceed')
                         ->action(function () {
                             $this->save();
                         })
