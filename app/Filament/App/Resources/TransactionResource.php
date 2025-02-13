@@ -48,9 +48,11 @@ class TransactionResource extends Resource
             ->striped()
             ->recordClasses(function (Model $record) {
                 if ($record->amount_before > $record->amount_after) {
-                    return 'bg-red-100';
+                    return 'bg-red-400';
+                } else if ($record->amount_before < $record->amount_after) {
+                    return 'bg-green-400';
                 } else {
-                    return 'bg-green-100';
+                    return '';
                 }
             })
             ->emptyStateHeading('No Transactions Yet')
@@ -107,10 +109,7 @@ class TransactionResource extends Resource
                         Infolists\Components\TextEntry::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state)),
                         Infolists\Components\TextEntry::make('reference'),
                         Infolists\Components\TextEntry::make('phone_number'),
-                        Infolists\Components\TextEntry::make('network')->formatStateUsing(fn(string $state): string => strtoupper($state)),
                         Infolists\Components\TextEntry::make('price')->label('Amount')->money('NGN'),
-                        Infolists\Components\TextEntry::make('amount_before')->label('Bal Before')->money('NGN'),
-                        Infolists\Components\TextEntry::make('amount_after')->label('Bal After')->money('NGN'),
                         Infolists\Components\TextEntry::make('status')->badge()
                             ->color(fn(string $state): string => match ($state) {
                                 'completed' => 'success',
@@ -119,7 +118,7 @@ class TransactionResource extends Resource
                                 default => 'primary',
                             }),
                         Infolists\Components\TextEntry::make('api_message')->label('API Response'),
-                        Infolists\Components\TextEntry::make('created_at')->dateTime(),
+                        Infolists\Components\TextEntry::make('created_at')->dateTime()->label('Date'),
                     ]),
 
 

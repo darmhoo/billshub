@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Filament\App\Widgets;
+namespace App\Filament\Widgets;
 
 use App\Models\Transaction;
-use Filament\Forms\Components\Section;
 use Filament\Infolists\Infolist;
 use Filament\Tables;
 use Filament\Infolists;
-
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\ActionsPosition;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Model;
 
-class TransactionsWidget extends BaseWidget
+class Transactions extends BaseWidget
 {
+    protected int|string|array $columnSpan = 'full';
     public function table(Table $table): Table
     {
+        // dd(Transaction::query()->where('id', auth()->user()->id));
         return $table
-            ->query(Transaction::query()->where('user_id', auth()->user()->id)->latest('created_at'))
-            ->striped()
+            ->query(Transaction::query()->latest('created_at'))
+            // ->striped()
             ->recordClasses(function (Model $record) {
                 if ($record->amount_before > $record->amount_after) {
                     return 'bg-red-400';
@@ -87,8 +87,6 @@ class TransactionsWidget extends BaseWidget
 
 
                     }),
-            ], position: ActionsPosition::BeforeCells)
-        ;
+            ], position: ActionsPosition::BeforeCells);
     }
-
 }

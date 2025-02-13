@@ -36,7 +36,9 @@ class BuyData extends Page
         return $form
             ->schema([
                 Select::make('network')
-                    ->options(Network::query()->pluck('name', 'id'))
+                    ->options(function (): array {
+                        return Network::all()->pluck('name', 'id')->all();
+                    })
                     ->required()
 
                     ->placeholder('Choose network')
