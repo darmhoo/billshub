@@ -8,7 +8,8 @@ use App\Models\Network;
 use App\Models\User;
 use App\Services\AirtimeService\AutoPilot;
 use App\Services\AirtimeService\VTPass;
-use Filament\Actions\Action;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Contracts\HasForms;
@@ -98,13 +99,23 @@ class BuyAirtime extends Page implements HasForms
                     ->placeholder('08026201234')
                     ->length(11),
 
+                Actions::make([
+                    Action::make('submit')
+                        ->requiresConfirmation()
+                        ->action(function () {
+                            $this->save();
+                        })
+                ])
+
             ])
             ->columns(2)
 
+
         ;
     }
-    public function save(Request $request)
+    public function save()
     {
+        // dd('here');
         $discount = AirtimeBundle::query()
             ->where('network_id', $this->network)
             ->where('account_type_id', auth()->user()->account_type_id)
@@ -117,7 +128,9 @@ class BuyAirtime extends Page implements HasForms
                 ->send();
             return;
         }
+
         $automation = $discount->automation;
+        // dd($automation);
         if ($automation->name === 'autopilot') {
             $autopilot = new AutoPilot($automation);
             $res = $autopilot->sendAirtime($this->phoneNumber, $this->amountToPurchase, $this->network, );
@@ -160,16 +173,16 @@ class BuyAirtime extends Page implements HasForms
             $vtpass = new VTPass($automation);
             $res = $vtpass->sendAirtime($this->phoneNumber, $this->amountToPurchase, $this->network, );
             // dd($res);
-            if ($res['content']['transactions']['status'] === true) {
+            if ($res['response_description'] === 'TRANSACTION SUCCESSFUL') {
                 auth()->user()->withdraw($real);
                 $transaction = auth()->user()->transaction()->create([
                     'price' => $real,
                     'transaction_type' => 'airtime',
                     'status' => 'completed',
-                    'reference' => $res['data']['request_id'],
+                    'reference' => $res['transactionId'],
                     'amount_before' => auth()->user()->balance + $real,
                     'amount_after' => auth()->user()->balance,
-                    'api_message' => $res['data']['message'],
+                    'api_message' => $res['response_description'],
                     'network' => Network::where('id', $this->network)->first()->name,
                     'phone_number' => $this->phoneNumber,
                 ]);
@@ -182,7 +195,7 @@ class BuyAirtime extends Page implements HasForms
                     'price' => $real,
                     'transaction_type' => 'airtime',
                     'status' => 'failed',
-                    'reference' => $res['requestId'] ?? '',
+                    'reference' => $res['transactionId'] ?? '',
                     'amount_before' => auth()->user()->balance,
                     'amount_after' => auth()->user()->balance,
                     'api_message' => $res['response_description'],

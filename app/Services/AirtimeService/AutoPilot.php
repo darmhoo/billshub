@@ -33,6 +33,8 @@ class AutoPilot
 
                 ]);
 
+        dd($res->json());
+
         return $res->json();
     }
 
