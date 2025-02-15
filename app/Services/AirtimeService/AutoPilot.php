@@ -30,10 +30,8 @@ class AutoPilot
                     'networkId' => $network,
                     'airtimeType' => 'VTU',
                     'reference' => strtotime(Carbon::now()) . Str::random(15)
-
                 ]);
 
-        dd($res->json());
 
         return $res->json();
     }
