@@ -16,9 +16,10 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Collection;
-use Filament\Notifications\Notification;
+use Filament\Notifications\Livewire\Notifications;
 use Request;
 
 class BuyAirtime extends Page implements HasForms
@@ -107,8 +108,28 @@ class BuyAirtime extends Page implements HasForms
                             return 'You are about to send ₦' . $get('amountToPurchase') . ' to ' . $get('phoneNumber');
                         })
                         ->modalSubmitActionLabel('Proceed')
-                        ->action(function () {
-                            $this->save();
+                        ->form([
+                            TextInput::make('transaction_pin')
+                                ->required()
+                                ->label('PIN')
+                        ])
+                        ->action(function (array $data) {
+                            if (auth()->user()->transaction_pin === null) {
+                                return Notification::make()
+                                    ->warning()
+                                    ->title('Invalid Pin')
+                                    ->body('You need to set your transaction pin before you can proceed!!!')
+                                    ->send();
+                            } else if (auth()->user()->transaction_pin !== $data['transaction_pin']) {
+                                return Notification::make()
+                                    ->warning()
+                                    ->title('Invalid Pin')
+                                    ->body('Pin is incorrect!!!')
+                                    ->send();
+                            } else {
+                                $this->save();
+                            }
+
                         })
                 ])
 
@@ -152,6 +173,10 @@ class BuyAirtime extends Page implements HasForms
                     'network' => Network::where('id', $this->network)->first()->name,
                     'phone_number' => $this->phoneNumber,
                 ]);
+                $this->phoneNumber = null;
+                $this->amountToPurchase = null;
+                $this->amountToPay = null;
+                $this->network = null;
                 Notification::make()
                     ->title('Airtime purchased successfully')
                     ->success()
@@ -184,7 +209,7 @@ class BuyAirtime extends Page implements HasForms
                     'price' => $real,
                     'transaction_type' => 'airtime',
                     'status' => 'completed',
-                    'reference' => $res['transactionId'],
+                    'reference' => $res['requestId'],
                     'amount_before' => auth()->user()->balance + $real,
                     'amount_after' => auth()->user()->balance,
                     'api_message' => $res['response_description'],
@@ -200,7 +225,7 @@ class BuyAirtime extends Page implements HasForms
                     'price' => $real,
                     'transaction_type' => 'airtime',
                     'status' => 'failed',
-                    'reference' => $res['transactionId'] ?? '',
+                    'reference' => $res['requestId'] ?? '',
                     'amount_before' => auth()->user()->balance,
                     'amount_after' => auth()->user()->balance,
                     'api_message' => $res['response_description'],

@@ -6,6 +6,7 @@ use App\Filament\App\Pages\AirtimeCash;
 use App\Filament\App\Pages\BuyAirtime;
 use App\Filament\App\Pages\BuyData;
 use App\Filament\App\Pages\Dashboard;
+use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Pages\Auth\RegisterUser;
 use App\Filament\Resources\AirtimeBundleResource;
 use Filament\Http\Middleware\Authenticate;
@@ -34,7 +35,7 @@ class AppPanelProvider extends PanelProvider
             ->registration(RegisterUser::class)
             ->emailVerification()
             ->passwordReset()
-            ->profile(isSimple: false)
+            ->profile(EditProfile::class, isSimple: false)
             ->sidebarCollapsibleOnDesktop()
             ->colors([
                 'primary' => '#674CC4',
