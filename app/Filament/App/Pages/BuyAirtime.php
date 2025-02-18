@@ -102,6 +102,9 @@ class BuyAirtime extends Page implements HasForms
 
                 Actions::make([
                     Action::make('submit')
+                        ->extraAttributes([
+                            'class' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full md:w-1/2',
+                        ])
                         ->requiresConfirmation()
                         ->modalHeading('Buy Airtime')
                         ->modalDescription(function (Get $get) {

@@ -13,8 +13,12 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Notifications\Livewire\Notifications;
+use Filament\Notifications\Notification;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\VerticalAlignment;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -40,6 +44,10 @@ class AppPanelProvider extends PanelProvider
             ->colors([
                 'primary' => '#674CC4',
             ])
+            ->bootUsing(function () {
+                Notifications::alignment(Alignment::Center);
+                Notifications::verticalAlignment(VerticalAlignment::Center);
+            })
             ->renderHook('panels::body.end', fn() => view('customFooter'))
             ->navigationGroups([
                 'Wallet',

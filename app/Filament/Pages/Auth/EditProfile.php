@@ -18,18 +18,19 @@ class EditProfile extends BaseEditProfile
         return $form
             ->schema([
 
-                $this->getNameFormComponent(),
+                $this->getNameFormComponent()->disabled(),
                 $this->getEmailFormComponent()->disabled(),
                 $this->getPasswordFormComponent(),
                 $this->getPasswordConfirmationFormComponent(),
                 TextInput::make('phone_number')
                     ->numeric()
-                    ->maxLength(11),
+                    ->maxLength(11)->disabled(),
                 TextInput::make('transaction_pin')
                     ->password()
                     ->numeric()
                     ->revealable(true)
                     ->maxLength(8)
+                    ->hidden(fn () => auth()->user()->transaction_pin !== null),
             ]);
     }
 
