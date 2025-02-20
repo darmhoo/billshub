@@ -57,7 +57,7 @@ class AdminResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(User::query()->role('admin'))
+            ->query(User::query()->role(['admin', 'super-admin']))
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),

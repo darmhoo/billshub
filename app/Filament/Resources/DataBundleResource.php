@@ -40,6 +40,11 @@ class DataBundleResource extends Resource
 
                     ->required()
                 ,
+                Forms\Components\Select::make('data_type_id')
+                    ->relationship(name: 'dataType', titleAttribute: 'name')
+
+                    ->required()
+                ,
                 Forms\Components\TextInput::make('price')
                     ->required()
                     ->prefix('₦')
@@ -65,13 +70,12 @@ class DataBundleResource extends Resource
                 Tables\Columns\TextColumn::make('description')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('accountType.name')
-                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('dataType.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('network.name')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('automation.name')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price')
                     ->numeric()
@@ -99,7 +103,8 @@ class DataBundleResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultPaginationPageOption(50);
     }
 
     public static function getRelations(): array

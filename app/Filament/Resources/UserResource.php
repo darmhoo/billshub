@@ -109,6 +109,7 @@ class UserResource extends Resource
                             'user_id' => auth()->id(),
                             'status' => 'completed',
                             'price' => $data['amount'],
+                            'description' => 'Wallet top-up for ' . $user->name . ' from ' . auth()->user()->name,
                             'amount_before' => auth()->user()->wallet_balance + $data['amount'],
                             'amount_after' => auth()->user()->wallet_balance,
                             'transaction_type' => 'debit',
@@ -117,8 +118,9 @@ class UserResource extends Resource
                             'user_id' => $user->id,
                             'price' => $data['amount'],
                             'transaction_type' => 'wallet-top-up',
-                            'amount_before' => auth()->user()->wallet_balance - $data['amount'],
-                            'amount_after' => auth()->user()->wallet_balance,
+                            'description' => 'Wallet top-up for ' . $user->name . ' from ' . auth()->user()->name,
+                            'amount_before' => $user->wallet_balance - $data['amount'],
+                            'amount_after' => $user->wallet_balance,
                             'status' => 'completed',
                         ]);
 

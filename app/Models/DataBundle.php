@@ -24,4 +24,9 @@ class DataBundle extends Model
     {
         return $this->belongsTo(Automation::class, "automate_id", "id");
     }
+
+    public function dataType(): BelongsTo
+    {
+        return $this->belongsTo(DataType::class, "data_type_id", "id");
+    }
 }
