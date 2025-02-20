@@ -38,6 +38,8 @@ class Transactions extends BaseWidget
 
                 TextColumn::make('phone_number')->searchable()->label('Phone'),
                 TextColumn::make('network')->formatStateUsing(fn(string $state): string => strtoupper($state))->searchable(),
+                TextColumn::make('description')->searchable()->label('Description'),
+
                 TextColumn::make('price')->money('NGN')->label('Amount'),
                 TextColumn::make('reference')->searchable()->copyable()
                     ->copyMessage('reference copied')

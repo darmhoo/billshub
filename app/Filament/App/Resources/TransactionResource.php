@@ -63,6 +63,8 @@ class TransactionResource extends Resource
 
                 TextColumn::make('phone_number')->searchable()->label('Phone'),
                 TextColumn::make('network')->formatStateUsing(fn(string $state): string => strtoupper($state))->searchable(),
+                TextColumn::make('description')->searchable()->label('Description'),
+
                 TextColumn::make('price')->money('NGN')->label('Amount'),
                 TextColumn::make('reference')->searchable()->copyable()
                     ->copyMessage('reference copied')
@@ -109,6 +111,7 @@ class TransactionResource extends Resource
                         Infolists\Components\TextEntry::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state)),
                         Infolists\Components\TextEntry::make('reference'),
                         Infolists\Components\TextEntry::make('phone_number'),
+                        Infolists\Components\TextEntry::make('description'),
                         Infolists\Components\TextEntry::make('price')->label('Amount')->money('NGN'),
                         Infolists\Components\TextEntry::make('status')->badge()
                             ->color(fn(string $state): string => match ($state) {
