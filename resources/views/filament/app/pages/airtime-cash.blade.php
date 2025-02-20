@@ -18,12 +18,20 @@
     <div>
         <form wire:submit="save">
             {{$this->form}}
-            <div class="my-5">
-                <x-filament::button wire:click="save" class="p-3 bg-green-300 text-green-950 rounded-lg w-full">
-                    Submit
-                </x-filament::button>
-            </div>
+
         </form>
+
+        {{$this->showOtp()}}
+
+        <x-filament::modal>
+            <x-slot name="trigger">
+                <x-filament::button>
+                    Open modal
+                </x-filament::button>
+            </x-slot>
+
+            {{-- Modal content --}}
+        </x-filament::modal>
         <x-filament-actions::modals />
 
 

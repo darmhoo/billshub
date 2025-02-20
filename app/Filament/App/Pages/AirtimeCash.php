@@ -5,7 +5,9 @@ namespace App\Filament\App\Pages;
 use App\Models\Automation;
 use App\Models\Network;
 use App\Services\AirtimeService\AutoPilot;
-use Filament\Actions\Action;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Actions;
+use Filament\Actions\Action as FilamentAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -39,19 +41,25 @@ class AirtimeCash extends Page
                     ->options(function (): array {
                         return Network::all()->pluck('name', 'id')->all();
                     })
+                    ->live()
+                    ->afterStateUpdated(function () {
+                        $this->validateOnly('network');
+                    })
                     ->required()
                     ->translateLabel()
 
                     ->placeholder('Choose network')
-                    ->live()
                 ,
 
 
                 TextInput::make('airtimeAmount')
+                    ->live()
                     ->required()
                     ->prefix('₦')
                     ->numeric()
                     ->afterStateUpdated(function (Set $set, $state, Get $get) {
+                        $this->validateOnly('airtimeAmount');
+
                         $discount = 10;
                         // dd($discount);
                         if ($discount) {
@@ -61,7 +69,7 @@ class AirtimeCash extends Page
 
                         }
                     })
-                    ->live(),
+                ,
 
                 TextInput::make('paidCash')
                     ->required()
@@ -71,9 +79,54 @@ class AirtimeCash extends Page
 
                 TextInput::make('phoneNumber')
                     ->required()
-                    ->regex('(^0)(7|8|9){1}(0|1){1}[0–9]{8})')
+                    ->live()
+                    ->afterStateUpdated(function () {
+                        $this->validateOnly('phoneNumber');
+
+                    })
+                    ->tel()
+                    ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
                     ->placeholder('08026201234')
                     ->length(11),
+
+                Actions::make([
+
+                    Action::make('submit')
+                        ->extraAttributes([
+                            'class' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full md:w-1/2',
+                        ])
+                        ->requiresConfirmation()
+                        ->modalHeading('Sell airtime')
+                        ->modalDescription(function (Get $get) {
+                            return 'You are about to send ₦' . $get('amountToPurchase') . ' to ' . $get('phoneNumber');
+                        })
+
+                        ->modalSubmitActionLabel('Proceed')
+                        ->form([
+                            TextInput::make('OTP')
+                                ->required()
+                                ->label('OTP')
+                        ])
+                        ->action(function (array $data) {
+                            if (auth()->user()->transaction_pin === null) {
+                                return Notification::make()
+                                    ->warning()
+                                    ->title('Invalid Pin')
+                                    ->body('You need to set your transaction pin before you can proceed!!!')
+                                    ->send();
+                            } else if (auth()->user()->transaction_pin !== $data['transaction_pin']) {
+                                return Notification::make()
+                                    ->warning()
+                                    ->title('Invalid Pin')
+                                    ->body('Pin is incorrect!!!')
+                                    ->send();
+                            } else {
+                                $this->save();
+                            }
+
+                        })
+                        ->modal()
+                ])
 
             ])
             ->columns(2)
@@ -81,14 +134,16 @@ class AirtimeCash extends Page
         ;
     }
 
-    public function save(Request $request)
+    public function save()
     {
+        $this->showOtp();
+
+        $this->validate();
         $automation = Automation::where('name', 'autopilot')->first();
         $autoPilot = new AutoPilot($automation);
 
         $res = $autoPilot->sendOtp($this->network, $this->phoneNumber);
         if ($res) {
-            $this->showOtp();
         } else {
             Notification::make()
                 ->title('Something went wrong. Please try again later')
@@ -100,16 +155,29 @@ class AirtimeCash extends Page
 
     public function showOtp()
     {
-        return Action::make('showOtp')
-            ->form([
-                TextInput::make('otp')
-                    ->label('OTP')
-                    ->required()
-            ])
-            ->label('Enter OTP')
-            ->modalHeading('Enter OTP')
-            ->modalWidth('max-w-xl')
-            ->modal();
+        $automation = Automation::where('name', 'autopilot')->first();
+        $autoPilot = new AutoPilot($automation);
+
+        $res = $autoPilot->sendOtp($this->network, $this->phoneNumber);
+        if ($res) {
+            return FilamentAction::make('showOtp')
+                ->form([
+                    TextInput::make('otp')
+                        ->label('OTP')
+                        ->required()
+                ])
+                ->label('Submit')
+                ->modalHeading('Enter OTP')
+                ->modalWidth('max-w-xl')
+                ->modal();
+        } else {
+            Notification::make()
+                ->title('Something went wrong. Please try again later')
+                ->danger()
+                ->send();
+        }
+
+
     }
 
 
