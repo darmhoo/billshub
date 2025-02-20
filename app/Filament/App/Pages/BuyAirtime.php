@@ -71,6 +71,7 @@ class BuyAirtime extends Page implements HasForms
                     ->required()
                     ->live()
                     ->afterStateUpdated(function (Set $set, $state, Get $get) {
+                        $this->validateOnly('amountToPurchase');
                         $discount = AirtimeBundle::query()
                             ->where('network_id', $get('network'))
                             ->where('account_type_id', auth()->user()->account_type_id)
@@ -96,7 +97,13 @@ class BuyAirtime extends Page implements HasForms
 
                 TextInput::make('phoneNumber')
                     ->required()
-                    ->regex('(^0)(7|8|9){1}(0|1){1}[0–9]{8})')
+                    ->live()
+                    ->afterStateUpdated(function () {
+                        $this->validateOnly('phoneNumber');
+
+                    })
+                    ->tel()
+                    ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
                     ->placeholder('08026201234')
                     ->length(11),
 
@@ -117,6 +124,8 @@ class BuyAirtime extends Page implements HasForms
                                 ->label('PIN')
                         ])
                         ->action(function (array $data) {
+
+                           
                             if (auth()->user()->transaction_pin === null) {
                                 return Notification::make()
                                     ->warning()
@@ -145,6 +154,7 @@ class BuyAirtime extends Page implements HasForms
     public function save()
     {
         // dd('here');
+
         $discount = AirtimeBundle::query()
             ->where('network_id', $this->network)
             ->where('account_type_id', auth()->user()->account_type_id)
@@ -251,13 +261,7 @@ class BuyAirtime extends Page implements HasForms
     }
 
 
-    protected function onValidationError(\Illuminate\Validation\ValidationException $exception): void
-    {
-        Notification::make()
-            ->title($exception->getMessage())
-            ->danger()
-            ->send();
-    }
+   
 
 
 

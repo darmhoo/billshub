@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\Transaction;
 use App\Models\User;
+use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -36,10 +38,6 @@ class UserResource extends Resource
                     ->tel()
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('wallet_balance')
-                    ->required()
-                    ->numeric()
-                    ->default(0.00),
                 Forms\Components\Select::make('account_type_id')
                     ->relationship(name: 'accountType', titleAttribute: 'name')
 
@@ -80,6 +78,60 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('Fund')
+                    ->label('Fund')
+                    ->modalSubheading('Your account balance: ₦' . auth()->user()->wallet_balance)
+                    ->modalDescription('You are funding the user from your wallet Your account balance: ₦' . auth()->user()->wallet_balance)
+                    ->form([
+                        Forms\Components\TextInput::make('amount')
+                            ->required()
+                            ->numeric()
+                            ->prefix('₦')
+                            ->required()
+                            ->default(0.00),
+                        Forms\Components\TextInput::make('wallet_balance')
+                            ->prefix('₦')
+                            ->default(0.00)
+                            ->disabled()
+                    ])
+                    ->action(function (User $user, $data) {
+                        if (auth()->user()->wallet_balance < $data['amount']) {
+                            Notification::make()
+                                ->title('Insufficient funds')
+                                ->body('You do not have enough funds to complete this transaction')
+                                ->danger()
+                                ->send();
+                            return;
+                        }
+                        $user->deposit($data['amount']);
+                        auth()->user()->withdraw($data['amount']);
+                        Transaction::create([
+                            'user_id' => auth()->id(),
+                            'status' => 'completed',
+                            'price' => $data['amount'],
+                            'amount_before' => auth()->user()->wallet_balance + $data['amount'],
+                            'amount_after' => auth()->user()->wallet_balance,
+                            'transaction_type' => 'debit',
+                        ]);
+                        Transaction::create([
+                            'user_id' => $user->id,
+                            'price' => $data['amount'],
+                            'transaction_type' => 'wallet-top-up',
+                            'amount_before' => auth()->user()->wallet_balance - $data['amount'],
+                            'amount_after' => auth()->user()->wallet_balance,
+                            'status' => 'completed',
+                        ]);
+
+                        Notification::make()
+                            ->title('Account Funded Successfully')
+                            ->success()
+                            ->send();
+                        return;
+
+                    })
+                    ->icon('heroicon-o-currency-dollar')
+                    ->modal()
+
 
             ])
             ->bulkActions([

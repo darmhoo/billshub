@@ -56,6 +56,29 @@ class AutoPilot
                     ]);
             return $res->json();
         } catch (\Throwable $th) {
+            return Notification::make()
+                ->title('Something went wrong. Please try again later')
+                ->danger()
+                ->send();
+        }
+
+    }
+
+    public function verifyOtp($otp, $identifier)
+    {
+        try {
+            //code...
+            $res = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->automation->api_key,
+            ])->post($this->automation->base_url . '/v1/verify/auto-airtime-to-cash-otp', [
+                        'identifier' => $identifier,
+                        'otp' => $otp,
+
+                    ]);
+            return $res->json();
+        } catch (\Throwable $th) {
             Notification::make()
                 ->title('Something went wrong. Please try again later')
                 ->danger()
