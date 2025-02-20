@@ -117,8 +117,8 @@ class UserResource extends Resource
                             'user_id' => $user->id,
                             'price' => $data['amount'],
                             'transaction_type' => 'wallet-top-up',
-                            'amount_before' => auth()->user()->wallet_balance - $data['amount'],
-                            'amount_after' => auth()->user()->wallet_balance,
+                            'amount_before' => $user->wallet_balance - $data['amount'],
+                            'amount_after' => $user->wallet_balance,
                             'status' => 'completed',
                         ]);
 
