@@ -122,10 +122,11 @@ class BuyAirtime extends Page implements HasForms
                             TextInput::make('transaction_pin')
                                 ->required()
                                 ->label('PIN')
+                                ->password()
                         ])
                         ->action(function (array $data) {
 
-                           
+
                             if (auth()->user()->transaction_pin === null) {
                                 return Notification::make()
                                     ->warning()
@@ -261,7 +262,7 @@ class BuyAirtime extends Page implements HasForms
     }
 
 
-   
+
 
 
 

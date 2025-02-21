@@ -1,4 +1,4 @@
-<x-filament-panels::page class="bg-gray-100 p-5">
+<x-filament-panels::page class="bg-gray-100 dark:bg-black p-5">
     <div class="flex flex-col gap-5 my-3">
         @foreach ($faqs as $faq)
 
