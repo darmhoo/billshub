@@ -3,8 +3,10 @@
 namespace App\Filament\Pages\Auth;
 
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Pages\Auth\EditProfile as BaseEditProfile;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
@@ -27,11 +29,52 @@ class EditProfile extends BaseEditProfile
                     ->maxLength(11)->disabled(),
                 TextInput::make('transaction_pin')
                     ->password()
-                    ->numeric()
-                    ->revealable(true)
+                    ->disabled()
                     ->maxLength(8)
-                    ->hidden(fn () => auth()->user()->transaction_pin !== null),
+                    ->minLength(4)
+                    ->suffixAction(
+                        Action::make('resetPin')
+                            ->label('Reset Pin')
+                            ->icon('heroicon-o-arrow-path')
+                            ->form([
+                                TextInput::make('password')
+                                    ->password()
+                                    ->revealable()
+                                    ->required()
+                                    ->label('Password'),
+                                TextInput::make('newPin')
+                                    ->password()
+                                    ->required()
+                                    ->label('New Pin'),
+                            ])->action(fn($data) => $this->resetPin($data))
+
+                    )
+                ,
             ]);
+    }
+
+    public function resetPin($request)
+    {
+
+        $user = $this->getUser();
+
+        if (!password_verify($request['password'], $user->password)) {
+            $this->addError('password', 'Invalid password');
+            Notification::make()
+                ->title('Invalid password')
+                ->error()
+                ->send();
+            return;
+        }
+
+        $user->update([
+            'transaction_pin' => $request['newPin'],
+        ]);
+
+        Notification::make()
+            ->title('Pin reset successfully')
+            ->success()
+            ->send();
     }
 
     public function save(): void

@@ -52,7 +52,8 @@ class BuyData extends Page
                     ->afterStateUpdated(function (Set $set, $state, Get $get) {
                         $plan = DataBundle::query()
                             ->where('network_id', $state)
-                            // ->where('account_type_id', auth()->user()->account_type_id)
+                            ->where('is_active', true)
+                            ->where('account_type_id', auth()->user()->account_type_id)
                             ->first();
                         // dd($discount);
                         if ($plan) {
@@ -83,6 +84,8 @@ class BuyData extends Page
                     ->options(fn(Get $get): Collection => DataBundle::query()
                         ->where('network_id', '=', $get('network'))
                         ->where('data_type_id', '=', $get('data_type'))
+                        ->where('is_active', true)
+
                         ->where('account_type_id', auth()->user()->account_type_id)
 
                         ->pluck('name', 'id'))
@@ -128,7 +131,10 @@ class BuyData extends Page
                         ->form([
                             TextInput::make('transaction_pin')
                                 ->required()
+                                ->password()
                                 ->label('PIN')
+                                ->maxLength(8)
+                                ->minLength(4)
                         ])
                         ->action(function (array $data) {
                             if (auth()->user()->transaction_pin === null) {
