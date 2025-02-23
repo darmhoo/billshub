@@ -56,12 +56,18 @@ class BuyData extends Page
                             ->where('account_type_id', auth()->user()->account_type_id)
                             ->first();
                         // dd($discount);
-                        if ($plan) {
-                            $set('price', $plan->price);
-                        } else {
+                        if ($get('data_type') === null || $get('bundle') === null) {
                             $set('price', 0.00);
+                        } else {
+                            if ($plan) {
+                                $set('price', $plan->price);
+                            } else {
+                                $set('price', 0.00);
 
+                            }
                         }
+                        $this->validateOnly('network');
+
                     }),
 
                 Select::make('data_type')
@@ -74,8 +80,10 @@ class BuyData extends Page
                         return $get('network') === null;
                     })
                     ->live()
-                    ->afterStateUpdated(function (Set $set, ?string $state) {
-                        $set('price', DataBundle::query()->where('id', '=', $state)->first()->price ?? 0.00);
+                    ->afterStateUpdated(function (Set $set, ?string $state, Get $get) {
+                        $set('price', DataBundle::query()->where('data_type_id', '=', $state, )->where('network_id', $get('network'))->where('id', $get('bundle'))->first()->price ?? 0.00);
+                        $this->validateOnly('data_type');
+
                     })
                     ->placeholder('Choose Bundle'),
 
@@ -99,8 +107,11 @@ class BuyData extends Page
                     ->disabled(function (Get $get): bool {
                         return $get('network') === null;
                     })
-                    ->afterStateUpdated(function (Set $set, ?string $state) {
-                        $set('price', DataBundle::query()->where('id', '=', $state)->first()->price ?? 0.00);
+                    ->afterStateUpdated(function (Set $set, ?string $state, Get $get) {
+                        // dd($state);
+                        $set('price', DataBundle::query()->where('id', '=', $state)->where('network_id', $get('network'))->where('data_type_id', $get('data_type'))->first()->price ?? 0.00);
+                        $this->validateOnly('bundle');
+
                     })
                     ->placeholder('Choose Bundle'),
 
@@ -112,9 +123,12 @@ class BuyData extends Page
 
                 TextInput::make('phoneNumber')
                     ->required()
-                    ->regex('(^0)(7|8|9){1}(0|1){1}[0–9]{8})')
                     ->placeholder('08026201234')
-                    ->length(11),
+                    ->tel()
+                    ->length(11)
+                    ->afterStateUpdated(function (Set $set, $state, Get $get) {
+                        $this->validateOnly('phoneNumber');
+                    }),
 
 
                 Actions::make([
@@ -165,6 +179,13 @@ class BuyData extends Page
     public function save()
     {
         // dd('here');
+        $this->validate([
+            'network' => 'required',
+            'bundle' => 'required',
+            'price' => 'required',
+            'data_type' => 'required',
+            'phoneNumber' => 'required',
+        ]);
 
 
         if (auth()->user()->balance < $this->price) {
