@@ -112,12 +112,12 @@ class UserResource extends Resource
                             'description' => 'From ' . auth()->user()->name . ' to ' . $user->name,
                             'amount_before' => auth()->user()->wallet_balance + $data['amount'],
                             'amount_after' => auth()->user()->wallet_balance,
-                            'transaction_type' => 'debit',
+                            'transaction_type' => 'Wallet-Debit',
                         ]);
                         Transaction::create([
                             'user_id' => $user->id,
                             'price' => $data['amount'],
-                            'transaction_type' => 'wallet-top-up',
+                            'transaction_type' => 'Wallet-Top-Up',
                             'description' => 'From ' . auth()->user()->name . ' to ' . $user->name,
                             'amount_before' => $user->wallet_balance - $data['amount'],
                             'amount_after' => $user->wallet_balance,
@@ -167,12 +167,12 @@ class UserResource extends Resource
                             'description' => 'From ' . $user->name . ' to ' . auth()->user()->name,
                             'amount_before' => auth()->user()->wallet_balance - $data['amount'],
                             'amount_after' => auth()->user()->wallet_balance,
-                            'transaction_type' => 'wallet-top-up',
+                            'transaction_type' => 'Wallet-Top-Up',
                         ]);
                         Transaction::create([
                             'user_id' => $user->id,
                             'price' => $data['amount'],
-                            'transaction_type' => 'debit',
+                            'transaction_type' => 'Wallet-Debit',
                             'description' => 'From ' . $user->name . ' to ' . auth()->user()->name,
                             'amount_before' => $user->wallet_balance + $data['amount'],
                             'amount_after' => $user->wallet_balance,
