@@ -126,6 +126,7 @@ class BuyData extends Page
                     ->placeholder('08026201234')
                     ->tel()
                     ->length(11)
+                    ->autocomplete()
                     ->afterStateUpdated(function (Set $set, $state, Get $get) {
                         $this->validateOnly('phoneNumber');
                     }),
