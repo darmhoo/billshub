@@ -37,7 +37,9 @@ class TransactionsWidget extends BaseWidget
                 TextColumn::make('reference')->searchable(),
 
                 TextColumn::make('phone_number')->searchable()->label('Phone'),
-                TextColumn::make('description')->searchable()->label('Description'),
+                TextColumn::make('description')->searchable()->label('Description')->searchable()->copyable()
+                    ->copyMessage('description copied')
+                    ->copyMessageDuration(1500),
                 TextColumn::make('network')->formatStateUsing(fn(string $state): string => strtoupper($state))->searchable(),
                 TextColumn::make('price')->money('NGN')->label('Amount'),
                 TextColumn::make('reference')->searchable()->copyable()
