@@ -10,6 +10,7 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification as FilamentNotification;
 use Filament\Support\Enums\Alignment;
 use Filament\Widgets\Widget;
 
@@ -30,30 +31,39 @@ class WalletOverview extends Widget implements HasForms, HasActions
 
     public function upgradeAccount()
     {
-        $plans = AccountType::query()->where('id', '>', auth()->user()->account_type_id)->where('name', '!=', 'staff')->get();
+        $plans = AccountType::query()->where('id', '>', auth()->user()->account_type_id)->where('name', '!=', 'staff')->first();
         return Action::make('upgradeAccount')
             ->label('Upgrade Account')
             ->modalHeading('Upgrade Account')
             ->modalSubheading('Wallet Balance: ' . auth()->user()->wallet_balance)
             ->modalWidth('max-w-xl')
-            ->form([
-                Select::make('plan')
-                    ->options(AccountType::query()->where('id', '>', auth()->user()->account_type_id)->where('name', '!=', 'staff')->pluck('name', 'id'))
-                    ->required()
-                    ->prefix(function ($state) {
-                        if ($state == 2) {
-                            return '₦1,000';
-                        } else if ($state == 3) {
-                            return '₦2,000';
-                        } else
-                            return '';
-                    })->live()
-            ])
+            ->modalContent(view('filament.app.pages.actions.upgrade', ['plans' => $plans]))
+            ->modalSubmitActionLabel('Upgrade')
             ->disabled(function () {
-                return auth()->user()->wallet_balance > 1000;
+                $user = auth()->user();
+                if ($user->accountType->name == 'staff' || $user->accountType->name == 'gold')
+                    return true;
+                if ($user->accountType->name == 'silver' && $user->wallet_balance < 3000)
+                    return true;
+                if ($user->accountType->name == 'bronze' && $user->wallet_balance < 2000)
+                    return true;
+                return false;
             })
-            ->action(function (array $data) {
-                auth()->user()->wallet->withdraw(200);
+            ->action(function (array $data) use ($plans) {
+                $user = auth()->user();
+                if ($user->accountType->name == 'bronze') {
+                    $user->withdraw(2000);
+                    $user->update(['account_type_id' => $plans->id]);
+                } else if ($user->accountType->name == 'silver') {
+                    $user->withdraw(3000);
+                    $user->update(['account_type_id' => $plans->id]);
+                }
+                FilamentNotification::make('Account Upgraded')
+                    ->body('Your account has been upgraded to ' . $plans->name)
+                    ->success()
+                    ->send();
+
+
 
             })
             ->modalIcon('heroicon-o-arrow-trending-up')

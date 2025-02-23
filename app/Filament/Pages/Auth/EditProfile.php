@@ -43,6 +43,9 @@ class EditProfile extends BaseEditProfile
                                     ->required()
                                     ->label('Password'),
                                 TextInput::make('newPin')
+                                    ->length(8)
+                                    ->maxLength(8)
+                                    ->minLength(4)
                                     ->password()
                                     ->required()
                                     ->label('New Pin'),
