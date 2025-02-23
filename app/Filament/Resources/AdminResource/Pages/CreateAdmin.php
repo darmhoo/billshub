@@ -22,7 +22,7 @@ class CreateAdmin extends CreateRecord
         $admin = static::getModel()::create($data);
         $admin->syncPermissions($permissions);
         $admin->assignRole('admin');
-        $admin->verified_at = now();
+        $admin->email_verified_at = now();
         $admin->save();
         return $admin;
     }

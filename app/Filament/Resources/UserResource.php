@@ -132,7 +132,64 @@ class UserResource extends Resource
 
                     })
                     ->icon('heroicon-o-currency-dollar')
+                    ->modal(),
+
+                Action::make('Withdraw')
+                    ->label('Withdraw')
+                    ->modalSubheading('Your account balance: ₦' . auth()->user()->wallet_balance)
+                    ->modalDescription(function (User $user) {
+                        return 'You are withrawing from the user ' . $user->name . ' account ' . $user->wallet_balance;
+                    })
+
+                    ->form([
+                        Forms\Components\TextInput::make('amount')
+                            ->required()
+                            ->numeric()
+                            ->prefix('₦')
+                            ->required()
+                            ->default(0.00),
+                    ])
+                    ->action(function (User $user, $data) {
+                        if ($user->wallet_balance < $data['amount']) {
+                            Notification::make()
+                                ->title('Insufficient funds')
+                                ->body('There is not enough funds to complete this transaction')
+                                ->danger()
+                                ->send();
+                            return;
+                        }
+                        $user->withdraw($data['amount']);
+                        auth()->user()->deposit($data['amount']);
+                        Transaction::create([
+                            'user_id' => auth()->id(),
+                            'status' => 'completed',
+                            'price' => $data['amount'],
+                            'description' => 'From ' . $user->name . ' to ' . auth()->user()->name,
+                            'amount_before' => auth()->user()->wallet_balance - $data['amount'],
+                            'amount_after' => auth()->user()->wallet_balance,
+                            'transaction_type' => 'wallet-top-up',
+                        ]);
+                        Transaction::create([
+                            'user_id' => $user->id,
+                            'price' => $data['amount'],
+                            'transaction_type' => 'debit',
+                            'description' => 'From ' . $user->name . ' to ' . auth()->user()->name,
+                            'amount_before' => $user->wallet_balance + $data['amount'],
+                            'amount_after' => $user->wallet_balance,
+                            'status' => 'completed',
+                        ]);
+
+                        Notification::make()
+                            ->title('Withdraw Funded Successfully')
+                            ->success()
+                            ->send();
+                        return;
+
+                    })
+                    ->icon('heroicon-o-currency-dollar')
                     ->modal()
+
+
 
 
             ])
