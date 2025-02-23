@@ -102,6 +102,7 @@ class BuyAirtime extends Page implements HasForms
                         $this->validateOnly('phoneNumber');
 
                     })
+                    ->autocomplete()
                     ->tel()
                     ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
                     ->placeholder('08026201234')
