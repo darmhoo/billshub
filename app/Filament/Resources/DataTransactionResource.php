@@ -10,6 +10,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -40,6 +41,27 @@ class DataTransactionResource extends Resource
 
             ->columns([
                 //
+                TextColumn::make('user.name')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable(),
+
+                TextColumn::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable()->label('Type'),
+                TextColumn::make('reference')->searchable()->copyable()
+                    ->copyMessage('reference copied')
+                    ->copyMessageDuration(1500),
+
+                TextColumn::make('phone_number')->searchable()->label('Phone')->copyable()
+                    ->copyMessage('phone number copied')
+                    ->copyMessageDuration(1500),
+
+
+                TextColumn::make('description')->formatStateUsing(fn(string $state): string => strtoupper($state))->searchable(),
+
+                TextColumn::make('network')->formatStateUsing(fn(string $state): string => strtoupper($state))->searchable(),
+                TextColumn::make('price')->money('NGN')->label('Amount'),
+                TextColumn::make('amount_before')->money('NGN')->label('Bal Before'),
+                TextColumn::make('amount_after')->money('NGN')->label('Bal After'),
+                TextColumn::make('status')->badge()->color(fn(string $state): string => match ($state) { 'completed' => 'success', 'pending' => 'warning', 'failed' => 'danger', default => 'primary',
+                })->searchable(),
+                TextColumn::make('created_at')->dateTime()->searchable(),
             ])
             ->filters([
                 //

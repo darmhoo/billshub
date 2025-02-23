@@ -43,7 +43,9 @@ class AirtimeTransactionResource extends Resource
             ->query(Transaction::query()->where('transaction_type', 'airtime')->latest())
             ->columns([
                 //
-                TextColumn::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable(),
+                TextColumn::make('user.name')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable(),
+
+                TextColumn::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable()->label('Type'),
                 TextColumn::make('reference')->searchable()->copyable()
                     ->copyMessage('reference copied')
                     ->copyMessageDuration(1500),

@@ -48,7 +48,7 @@ class TransactionResource extends Resource
             ->striped()
             ->recordClasses(function (Model $record) {
                 if ($record->amount_before > $record->amount_after) {
-                    return 'bg-red-400';
+                    return 'bg-transparent';
                 } else if ($record->amount_before < $record->amount_after) {
                     return 'bg-green-400';
                 } else {
@@ -58,7 +58,7 @@ class TransactionResource extends Resource
             ->emptyStateHeading('No Transactions Yet')
             ->columns([
                 //
-                TextColumn::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable(),
+                TextColumn::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable()->label('Type'),
                 TextColumn::make('reference')->searchable(),
 
                 TextColumn::make('phone_number')->searchable()->label('Phone'),

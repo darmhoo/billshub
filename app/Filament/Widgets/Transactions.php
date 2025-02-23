@@ -23,7 +23,7 @@ class Transactions extends BaseWidget
             // ->striped()
             ->recordClasses(function (Model $record) {
                 if ($record->amount_before > $record->amount_after) {
-                    return 'bg-red-400';
+                    return 'bg-transparent';
                 } else if ($record->amount_before < $record->amount_after) {
                     return 'bg-green-400';
                 } else {
@@ -33,7 +33,8 @@ class Transactions extends BaseWidget
             ->emptyStateHeading('No Transactions Yet')
             ->columns([
                 //
-                TextColumn::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable(),
+                TextColumn::make('user.name')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable(),
+                TextColumn::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable()->label('Type'),
                 TextColumn::make('reference')->searchable(),
 
                 TextColumn::make('phone_number')->searchable()->label('Phone'),
@@ -69,7 +70,7 @@ class Transactions extends BaseWidget
                         return $infolist
 
                             ->schema([
-                                Infolists\Components\TextEntry::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state)),
+                                Infolists\Components\TextEntry::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state))->label('Type'),
                                 Infolists\Components\TextEntry::make('reference'),
                                 Infolists\Components\TextEntry::make('phone_number'),
                                 Infolists\Components\TextEntry::make('price')->label('Amount')->money('NGN'),
