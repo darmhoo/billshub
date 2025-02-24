@@ -10,6 +10,9 @@ class ListAirtimeTransactions extends ListRecords
 {
     protected static string $resource = AirtimeTransactionResource::class;
 
+    protected static ?string $title = "Airtime Transactions";
+
+
     protected function getHeaderActions(): array
     {
         return [

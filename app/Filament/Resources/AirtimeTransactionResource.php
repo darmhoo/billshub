@@ -3,17 +3,17 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\AirtimeTransactionResource\Pages;
-use App\Filament\Resources\AirtimeTransactionResource\RelationManagers;
-use App\Models\AirtimeTransaction;
 use App\Models\Transaction;
-use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Infolists;
+
+
 
 class AirtimeTransactionResource extends Resource
 {
@@ -67,6 +67,8 @@ class AirtimeTransactionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -81,6 +83,35 @@ class AirtimeTransactionResource extends Resource
             //
         ];
     }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('Details')
+                    ->columns(2)
+                    ->schema([
+                        Infolists\Components\TextEntry::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state)),
+                        Infolists\Components\TextEntry::make('reference'),
+                        Infolists\Components\TextEntry::make('phone_number'),
+                        Infolists\Components\TextEntry::make('description'),
+                        Infolists\Components\TextEntry::make('price')->label('Amount')->money('NGN'),
+                        Infolists\Components\TextEntry::make('status')->badge()
+                            ->color(fn(string $state): string => match ($state) {
+                                'completed' => 'success',
+                                'pending' => 'warning',
+                                'failed' => 'danger',
+                                default => 'primary',
+                            }),
+                        Infolists\Components\TextEntry::make('api_message')->label('API Response'),
+                        Infolists\Components\TextEntry::make('created_at')->dateTime()->label('Date'),
+                    ]),
+
+
+
+            ]);
+    }
+
 
     public static function getPages(): array
     {

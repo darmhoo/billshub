@@ -3,17 +3,16 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\DataTransactionResource\Pages;
-use App\Filament\Resources\DataTransactionResource\RelationManagers;
-use App\Models\DataTransaction;
+
 use App\Models\Transaction;
-use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Infolists;
 
 class DataTransactionResource extends Resource
 {
@@ -41,7 +40,9 @@ class DataTransactionResource extends Resource
 
             ->columns([
                 //
-                TextColumn::make('user.name')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable(),
+                TextColumn::make('user.name')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable()->copyable()
+                    ->copyMessage('Type copied')
+                    ->copyMessageDuration(1500),
 
                 TextColumn::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state))->searchable()->label('Type'),
                 TextColumn::make('reference')->searchable()->copyable()
@@ -53,7 +54,9 @@ class DataTransactionResource extends Resource
                     ->copyMessageDuration(1500),
 
 
-                TextColumn::make('description')->formatStateUsing(fn(string $state): string => strtoupper($state))->searchable(),
+                TextColumn::make('description')->formatStateUsing(fn(string $state): string => strtoupper($state))->searchable()->copyable()
+                    ->copyMessage('Type copied')
+                    ->copyMessageDuration(1500),
 
                 TextColumn::make('network')->formatStateUsing(fn(string $state): string => strtoupper($state))->searchable(),
                 TextColumn::make('price')->money('NGN')->label('Amount'),
@@ -68,11 +71,40 @@ class DataTransactionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('Details')
+                    ->columns(2)
+                    ->schema([
+                        Infolists\Components\TextEntry::make('transaction_type')->formatStateUsing(fn(string $state): string => ucfirst($state)),
+                        Infolists\Components\TextEntry::make('reference'),
+                        Infolists\Components\TextEntry::make('phone_number'),
+                        Infolists\Components\TextEntry::make('description'),
+                        Infolists\Components\TextEntry::make('price')->label('Amount')->money('NGN'),
+                        Infolists\Components\TextEntry::make('status')->badge()
+                            ->color(fn(string $state): string => match ($state) {
+                                'completed' => 'success',
+                                'pending' => 'warning',
+                                'failed' => 'danger',
+                                default => 'primary',
+                            }),
+                        Infolists\Components\TextEntry::make('api_message')->label('API Response'),
+                        Infolists\Components\TextEntry::make('created_at')->dateTime()->label('Date'),
+                    ]),
+
+
+
             ]);
     }
 

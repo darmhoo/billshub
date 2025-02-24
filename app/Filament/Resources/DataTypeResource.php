@@ -19,6 +19,11 @@ class DataTypeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Data';
+
+
+
+
     public static function form(Form $form): Form
     {
         return $form
@@ -26,7 +31,7 @@ class DataTypeResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                
+
             ]);
     }
 
@@ -36,7 +41,7 @@ class DataTypeResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-               
+
             ])
             ->filters([
                 //
