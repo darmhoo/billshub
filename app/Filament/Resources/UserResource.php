@@ -12,6 +12,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -74,6 +75,10 @@ class UserResource extends Resource
             ])
             ->filters([
                 //
+                Filter::make('is_active')
+                    ->query(function (Builder $query) {
+                        $query->where('is_active', true);
+                    })
 
             ])
             ->actions([
@@ -89,10 +94,8 @@ class UserResource extends Resource
                             ->prefix('₦')
                             ->required()
                             ->default(0.00),
-                        Forms\Components\TextInput::make('wallet_balance')
-                            ->prefix('₦')
-                            ->default(0.00)
-                            ->disabled()
+                        Forms\Components\TextInput::make('description')
+
                     ])
                     ->action(function (User $user, $data) {
                         if (auth()->user()->wallet_balance < $data['amount']) {
@@ -106,15 +109,7 @@ class UserResource extends Resource
                         $user->deposit($data['amount']);
                         auth()->user()->withdraw($data['amount']);
 
-                        Transaction::create([
-                            'user_id' => $user->id,
-                            'price' => $data['amount'],
-                            'transaction_type' => 'Wallet-Top-Up',
-                            'description' => auth()->user()->name . ' to ' . $user->name,
-                            'amount_before' => $user->wallet_balance - $data['amount'],
-                            'amount_after' => $user->wallet_balance,
-                            'status' => 'completed',
-                        ]);
+
 
                         Transaction::create([
                             'user_id' => auth()->id(),
@@ -124,6 +119,15 @@ class UserResource extends Resource
                             'amount_before' => auth()->user()->wallet_balance + $data['amount'],
                             'amount_after' => auth()->user()->wallet_balance,
                             'transaction_type' => 'Wallet-Debit',
+                        ]);
+                        Transaction::create([
+                            'user_id' => $user->id,
+                            'price' => $data['amount'],
+                            'transaction_type' => 'Wallet-Top-Up',
+                            'description' => auth()->user()->name . ' to ' . $user->name,
+                            'amount_before' => $user->wallet_balance - $data['amount'],
+                            'amount_after' => $user->wallet_balance,
+                            'status' => 'completed',
                         ]);
 
                         Notification::make()

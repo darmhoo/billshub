@@ -10,6 +10,8 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Filament\Infolists;
 
@@ -64,6 +66,23 @@ class AirtimeTransactionResource extends Resource
             ])
             ->filters([
                 //
+                SelectFilter::make('status')
+                    ->options([
+                        'completed' => 'Completed',
+                        'failed' => 'Failed',
+                    ])
+                    ->label('Status'),
+
+                SelectFilter::make('network')
+                    ->options([
+                        'mtn' => 'MTN',
+                        'airtel' => 'Airtel',
+                        'glo' => 'Glo',
+                        '9mobile' => '9mobile',
+                    ])
+                    ->label('Network'),
+
+                
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
