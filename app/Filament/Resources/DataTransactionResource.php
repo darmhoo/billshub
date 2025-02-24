@@ -70,7 +70,6 @@ class DataTransactionResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
@@ -120,7 +119,7 @@ class DataTransactionResource extends Resource
         return [
             'index' => Pages\ListDataTransactions::route('/'),
             'create' => Pages\CreateDataTransaction::route('/create'),
-            'edit' => Pages\EditDataTransaction::route('/{record}/edit'),
+            // 'edit' => Pages\EditDataTransaction::route('/{record}/edit'),
         ];
     }
 }

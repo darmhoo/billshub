@@ -50,14 +50,14 @@ class BuyData extends Page
                     ->placeholder('Choose network')
                     ->live()
                     ->afterStateUpdated(function (Set $set, $state, Get $get) {
+                        // dump($get())
+                        $set('bundle', null);
                         $plan = DataBundle::query()
-                            ->where('network_id', $state)
-                            ->where('is_active', true)
-                            ->where('account_type_id', auth()->user()->account_type_id)
+                            ->where('id', $get('bundle'))
                             ->first();
                         // dd($discount);
                         if ($get('data_type') === null || $get('bundle') === null) {
-                            $set('price', 0.00);
+                            $set('price', null);
                         } else {
                             if ($plan) {
                                 $set('price', $plan->price);
@@ -81,7 +81,23 @@ class BuyData extends Page
                     })
                     ->live()
                     ->afterStateUpdated(function (Set $set, ?string $state, Get $get) {
-                        $set('price', DataBundle::query()->where('data_type_id', '=', $state, )->where('network_id', $get('network'))->where('id', $get('bundle'))->first()->price ?? 0.00);
+                        $set('bundle', null);
+
+                        $plan = DataBundle::query()
+                            ->where('id', $get('bundle'))
+                            ->where('is_active', true)
+                            ->first();
+                        // dd($discount);
+                        if ($get('data_type') === null || $get('bundle') === null) {
+                            $set('price', null);
+                        } else {
+                            if ($plan) {
+                                $set('price', $plan->price);
+                            } else {
+                                $set('price', 0.00);
+
+                            }
+                        }
                         $this->validateOnly('data_type');
 
                     })
@@ -109,7 +125,21 @@ class BuyData extends Page
                     })
                     ->afterStateUpdated(function (Set $set, ?string $state, Get $get) {
                         // dd($state);
-                        $set('price', DataBundle::query()->where('id', '=', $state)->where('network_id', $get('network'))->where('data_type_id', $get('data_type'))->first()->price ?? 0.00);
+                        $plan = DataBundle::query()
+                            ->where('id', $state)
+                            ->where('is_active', true)
+                            ->first();
+                        // dd($discount);
+                        if ($get('data_type') === null || $get('bundle') === null) {
+                            $set('price', null);
+                        } else {
+                            if ($plan) {
+                                $set('price', $plan->price);
+                            } else {
+                                $set('price', 0.00);
+
+                            }
+                        }
                         $this->validateOnly('bundle');
 
                     })
