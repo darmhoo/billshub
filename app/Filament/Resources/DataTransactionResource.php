@@ -36,7 +36,7 @@ class DataTransactionResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(Transaction::query()->where('transaction_type', 'data'))
+            ->query(Transaction::query()->where('transaction_type', 'data')->latest('created_at'))
 
             ->columns([
                 //
