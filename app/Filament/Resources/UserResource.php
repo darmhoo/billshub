@@ -93,8 +93,8 @@ class UserResource extends Resource
                             ->numeric()
                             ->prefix('₦')
                             ->required()
-                            ->default(0.00),
-                        Forms\Components\TextInput::make('description')
+                            ->placeholder('3,000')
+                        // Forms\Components\TextInput::make('description')
 
                     ])
                     ->action(function (User $user, $data) {

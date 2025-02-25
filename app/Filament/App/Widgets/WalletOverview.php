@@ -53,10 +53,12 @@ class WalletOverview extends Widget implements HasForms, HasActions
                 $user = auth()->user();
                 if ($user->accountType->name == 'bronze') {
                     $user->withdraw(2000);
-                    $user->update(['account_type_id' => $plans->id]);
+                    $user->account_type_id = $plans->id;
+                    $user->save();
                 } else if ($user->accountType->name == 'silver') {
                     $user->withdraw(3000);
-                    $user->update(['account_type_id' => $plans->id]);
+                    $user->account_type_id = $plans->id;
+                    $user->save();
                 }
                 FilamentNotification::make('Account Upgraded')
                     ->body('Your account has been upgraded to ' . $plans->name)

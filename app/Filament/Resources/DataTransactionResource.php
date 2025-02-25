@@ -5,14 +5,19 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DataTransactionResource\Pages;
 
 use App\Models\Transaction;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Filament\Infolists;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 
 class DataTransactionResource extends Resource
 {
@@ -36,6 +41,49 @@ class DataTransactionResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->filters([
+                //
+                SelectFilter::make('status')
+                    ->options([
+                        'completed' => 'Completed',
+                        'failed' => 'Failed',
+                    ])
+                    ->label('Status'),
+
+                SelectFilter::make('network')
+                    ->options([
+                        'mtn' => 'MTN',
+                        'airtel' => 'Airtel',
+                        'glo' => 'Glo',
+                        '9mobile' => '9mobile',
+                    ])
+                    ->label('Network'),
+                Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('created_from'),
+                        DatePicker::make('created_until'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if (!$data['created_from'] && !$data['created_until']) {
+                            return null;
+                        }
+
+                        return 'Created at ' . Carbon::parse($data['created_from'])->toFormattedDateString();
+                    })
+
+
+            ])
             ->query(Transaction::query()->where('transaction_type', 'data')->latest('created_at'))
 
             ->columns([
@@ -66,9 +114,7 @@ class DataTransactionResource extends Resource
                 })->searchable(),
                 TextColumn::make('created_at')->dateTime()->searchable(),
             ])
-            ->filters([
-                //
-            ])
+
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])
