@@ -45,6 +45,7 @@ class Transactions extends BaseWidget
                     ->options([
                         'airtime' => 'Airtime',
                         'data' => 'Data',
+                        'electricity' => 'Electricity',
                     ])
                     ->label('Type'),
                 Filter::make('created_at')

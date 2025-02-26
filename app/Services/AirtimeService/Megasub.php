@@ -2,6 +2,7 @@
 
 namespace App\Services\AirtimeService;
 use App\Models\Automation;
+use App\Models\Network;
 use Carbon\Carbon;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Http;
@@ -40,7 +41,15 @@ class Megasub
     public function buyData($phoneNumber, $planId, $network, $dataType)
     {
         //
+        $networks = [
+            'mtn' => 1,
+            'glo' => 2,
+            'airtel' => 3,
+            '9mobile' => 4,
+        ];
         try {
+            // dd($planId, $network, $dataType);
+            $n = Network::where('id', $network)->first()->name;
             $dt = '';
             if ($dataType == 'AWOOF/GIFTING') {
                 $dt = 'DIRECT GIFTING';
@@ -49,17 +58,21 @@ class Megasub
             } else {
                 $dt = 'CORPORATE GIFTING';
             }
+            $data = [
+                'mobile_number' => $phoneNumber,
+                'data_api_id' => $planId,
+                'network_api_id' => $networks[strtolower($n)],
+                'validatephonenetwork' => true,
+                'duplication_check' => true,
+            ];
+            // dd($data);
             $res = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->automation->api_key,
-            ])->post($this->automation->base_url . '?action=buy_data', [
-                        'phone' => $phoneNumber,
-                        'planId' => $planId,
-                        'networkId' => $network,
-                        'dataType' => $dt,
-                        'reference' => strtotime(Carbon::now()) . Str::random(15)
-                    ]);
+                'Authorization' => 'Token ' . $this->automation->api_key,
+                'Password' => $this->automation->password
+
+            ])->post($this->automation->base_url . '?action=buy_data', $data);
 
 
             return $res->json();

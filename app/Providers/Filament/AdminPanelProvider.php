@@ -43,6 +43,7 @@ class AdminPanelProvider extends PanelProvider
                 'Dashboard',
                 'Airtime',
                 'Data',
+                'Electricity',
                 'Notifications',
                 'External Services',
                 'User Management',
