@@ -6,6 +6,7 @@ use App\Models\DataBundle;
 use App\Models\DataType;
 use App\Models\Network;
 use App\Services\AirtimeService\AutoPilot;
+use App\Services\AirtimeService\Megasub;
 use App\Services\AirtimeService\VTPass;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -273,9 +274,11 @@ class BuyData extends Page
                     ->send();
             }
         }
-        if ($automation->name === 'VTPASS') {
-            $vtpass = new VTPass($automation);
-            $res = $vtpass->sendAirtime($this->phoneNumber, $this->amountToPurchase, $this->network, );
+
+
+        if ($automation->name === 'Megasubplug') {
+            $vtpass = new Megasub($automation);
+            $res = $vtpass->buyData($this->phoneNumber, DataBundle::where('id', $this->bundle)->first()->plan_id, $this->network, DataType::where('id', $this->data_type)->first()->name);
             // dd($res);
             if ($res['response_description'] === 'TRANSACTION SUCCESSFUL') {
                 auth()->user()->withdraw($this->price);
