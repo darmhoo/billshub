@@ -59,7 +59,7 @@ class RegisterUser extends BaseRegister
         $user->save();
         $user->assignRole('user');
 
-        CreateUser::createWallet($user);
+        // CreateUser::createWallet($user);
 
         // app()->bind(
         //     SendEmailVerificationNotification::class,
