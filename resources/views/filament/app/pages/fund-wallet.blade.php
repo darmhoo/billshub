@@ -7,6 +7,15 @@
                 NOTE: A charges of <span class="text-red-600 font-semibold">₦54.00</span> will be deducted from your
                 payment.
             </div>
+
+            @if (count($bank_accounts) < 1)
+                <div class="bg-red-50 text-red-500 p-3 rounded-lg">
+                    <p class="mb-5">You need to get a virtual account from our trusted vendors</p>
+                    {{$this->getVirtualAccount() }}
+                    <x-filament-actions::modals />
+                </div>
+
+            @endif
             <div class="flex flex-col gap-5 my-3">
                 @foreach ($bank_accounts as $account)
                     <div>

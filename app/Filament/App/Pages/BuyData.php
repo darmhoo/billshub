@@ -279,7 +279,7 @@ class BuyData extends Page
         if ($automation->name === 'Megasubplug') {
             $vtpass = new Megasub($automation);
             $res = $vtpass->buyData($this->phoneNumber, DataBundle::where('id', $this->bundle)->first()->plan_id, $this->network, DataType::where('id', $this->data_type)->first()->name);
-            // dd($res);
+            dd($res);
             if ($res['response_description'] === 'TRANSACTION SUCCESSFUL') {
                 auth()->user()->withdraw($this->price);
                 $transaction = auth()->user()->transaction()->create([

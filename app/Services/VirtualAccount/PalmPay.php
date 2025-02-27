@@ -1,55 +1,58 @@
 <?php
 
-namespace App\Services\AirtimeService;
-use App\Models\Automation;
-use App\Models\Network;
+namespace App\Services\VirtualAccount;
+use App\Models\VirtualAccount;
 use Carbon\Carbon;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
-class Megasub
+class PalmPay
 {
-    private $automation;
-    public function __construct(Automation $automation)
+    private $virtualAccount;
+    public function __construct(VirtualAccount $virtualAccount)
     {
-        $this->automation = $automation;
+        $this->virtualAccount = $virtualAccount;
         // 
     }
 
 
-    public function sendAirtime($phoneNumber, $amount, $network)
+    public function createVirtualAccount($bvn, $customerName, $email)
     {
         // 
-        $res = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->automation->api_key,
-        ])->post($this->automation->base_url . '/v1/airtime', [
-                    'phone' => $phoneNumber,
-                    'amount' => $amount,
-                    'networkId' => $network,
-                    'airtimeType' => 'VTU',
-                    'reference' => strtotime(Carbon::now()) . Str::random(15)
-                ]);
+        // dd(strtotime(Carbon::now()));
+        try {
+            $res = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->virtualAccount->api_key,
+                'countryCode' => 'NG',
+                'Signature' => $this->virtualAccount->secret_key,
+            ])->post($this->virtualAccount->url . 'api/v2/virtual/account/label/create', [
+                        'requestTime' => Carbon::now()->valueOf(),
+                        'identityType' => 'personal',
+                        'licenseNumber' => $bvn,
+                        'virtualAccountName' => 'PalmPay-' . 'Gbills-' . substr($customerName, 0, 3),
+                        'version' => 'V2.0',
+                        'nonceStr' => strtotime(Carbon::now()) . Str::random(15),
+                        'customerName' => $customerName,
+                        'email' => $email
+
+                    ]);
 
 
-        return $res->json();
+            return $res->json();
+        } catch (\Throwable $th) {
+            return $th;
+        }
+
     }
 
 
-    public function buyData($phoneNumber, $planId, $network, $dataType)
+    public function deleteAccount($phoneNumber, $planId, $network, $dataType)
     {
         //
-        $networks = [
-            'mtn' => 1,
-            'glo' => 2,
-            'airtel' => 3,
-            '9mobile' => 4,
-        ];
         try {
-            // dd($planId, $network, $dataType);
-            $n = Network::where('id', $network)->first()->name;
             $dt = '';
             if ($dataType == 'AWOOF/GIFTING') {
                 $dt = 'DIRECT GIFTING';
@@ -58,22 +61,17 @@ class Megasub
             } else {
                 $dt = 'CORPORATE GIFTING';
             }
-            $data = [
-                'action' => 'buy_data',
-                'mobile_number' => $phoneNumber,
-                'data_api_id' => $planId,
-                'network_api_id' => $networks[strtolower($n)],
-                'validatephonenetwork' => '1',
-                'duplication_check' => '1',
-            ];
-            // dd($data);
             $res = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
                 'Authorization' => 'Bearer ' . $this->automation->api_key,
-                'Password' => $this->automation->password
-
-            ])->post($this->automation->base_url . '?action=buy_data', $data);
+            ])->post($this->automation->base_url . '/v1/data', [
+                        'phone' => $phoneNumber,
+                        'planId' => $planId,
+                        'networkId' => $network,
+                        'dataType' => $dt,
+                        'reference' => strtotime(Carbon::now()) . Str::random(15)
+                    ]);
 
 
             return $res->json();
