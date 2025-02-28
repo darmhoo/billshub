@@ -1,1 +1,1 @@
-web: vendor/bin/heroku-php-apache2 public/
+web: bin/proximo vendor/bin/heroku-php-apache2 public/
