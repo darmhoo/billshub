@@ -39,8 +39,7 @@ class VirtualAccountResource extends Resource
                 Forms\Components\TextInput::make('api_key')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('secret_key')
-                    ->maxLength(255)
+                Forms\Components\Textarea::make('secret_key')
                     ->default(null),
                 Forms\Components\TextInput::make('merchant_code')
                     ->maxLength(255)

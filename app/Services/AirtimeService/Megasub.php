@@ -63,7 +63,7 @@ class Megasub
                 'mobile_number' => $phoneNumber,
                 'data_api_id' => $planId,
                 'network_api_id' => $networks[strtolower($n)],
-                'validatephonenetwork' => '1',
+                'validatephonenetwork' => '0',
                 'duplication_check' => '1',
             ];
             // dd($data);

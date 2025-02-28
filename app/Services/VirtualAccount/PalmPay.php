@@ -22,23 +22,37 @@ class PalmPay
         // 
         // dd(strtotime(Carbon::now()));
         try {
+            $data = [
+                'customerName' => $customerName,
+                'email' => $email,
+                'identityType' => 'personal',
+                'licenseNumber' => $bvn,
+                'nonceStr' => strtotime(Carbon::now()) . Str::random(15),
+                'requestTime' => Carbon::now()->valueOf(),
+                'virtualAccountName' => 'PalmPay-' . 'Gbills-' . substr($customerName, 0, 5),
+                'version' => 'V2.0',
+            ];
+            $sStr = urldecode(http_build_query($data));
+            // dd($sStr);
+
+            $hash = strtoupper(md5($sStr));
+
+            // dd($this->virtualAccount->secret_key);
+            $details = openssl_pkey_get_private($this->virtualAccount->secret_key);
+            // dd($details);
+
+            $signed = openssl_sign($hash, signature: $signature, private_key: $details, algorithm: OPENSSL_ALGO_SHA1);
+
+            // dd(base64_encode($signature));
+
+
             $res = Http::withHeaders([
-                'Content-Type' => 'application/json',
+                'Content-Type' => 'application/json;charset=UTF-8',
                 'Accept' => 'application/json',
                 'Authorization' => 'Bearer ' . $this->virtualAccount->api_key,
                 'countryCode' => 'NG',
-                'Signature' => $this->virtualAccount->secret_key,
-            ])->post($this->virtualAccount->url . 'api/v2/virtual/account/label/create', [
-                        'requestTime' => Carbon::now()->valueOf(),
-                        'identityType' => 'personal',
-                        'licenseNumber' => $bvn,
-                        'virtualAccountName' => 'PalmPay-' . 'Gbills-' . substr($customerName, 0, 3),
-                        'version' => 'V2.0',
-                        'nonceStr' => strtotime(Carbon::now()) . Str::random(15),
-                        'customerName' => $customerName,
-                        'email' => $email
-
-                    ]);
+                'Signature' => base64_encode($signature),
+            ])->post($this->virtualAccount->url . 'api/v2/virtual/account/label/create', $data);
 
 
             return $res->json();
