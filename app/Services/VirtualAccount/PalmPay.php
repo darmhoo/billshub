@@ -44,7 +44,12 @@ class PalmPay
             $signed = openssl_sign($hash, signature: $signature, private_key: $details, algorithm: OPENSSL_ALGO_SHA1);
 
             // dd(base64_encode($signature));
+            $quota = env('QUOTAGUARDSTATIC_URL');
+            $quota = parse_url($quota);
+            $proxyUrl = $quota['host'] . ":" . $quota['port'];
+            $proxyAuth = $quota['user'] . ":" . $quota['pass'];
 
+            // dd($proxyAuth, $proxyUrl);
 
             $res = Http::withHeaders([
                 'Content-Type' => 'application/json;charset=UTF-8',
@@ -52,7 +57,11 @@ class PalmPay
                 'Authorization' => 'Bearer ' . $this->virtualAccount->api_key,
                 'countryCode' => 'NG',
                 'Signature' => base64_encode($signature),
-            ])->post($this->virtualAccount->url . 'api/v2/virtual/account/label/create', $data);
+            ])->withOptions([
+                        'proxy' => $proxyUrl,
+                        'proxyauth' => 'auth_basic',
+                        'proxyuserpwd' => $proxyAuth
+                    ])->post($this->virtualAccount->url . 'api/v2/virtual/account/label/create', $data);
 
 
             return $res->json();
