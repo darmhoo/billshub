@@ -55,7 +55,7 @@ class FundWallet extends Page
             ])
             ->action(function ($data) use ($accountService) {
                 $res = $accountService->createVirtualAccount($data['bvn'], auth()->user()->name, auth()->user()->email);
-                dd($res);
+                // dd($res);
                 if ($res['status'] == true) {
                     UserAccount::create([
                         'user_id' => auth()->user()->id,
