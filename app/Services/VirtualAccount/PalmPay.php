@@ -57,7 +57,7 @@ class PalmPay
 
             return $res->json();
         } catch (\Throwable $th) {
-            return $th;
+            throw $th;
         }
 
     }
