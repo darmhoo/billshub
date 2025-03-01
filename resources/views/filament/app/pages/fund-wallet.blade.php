@@ -31,7 +31,7 @@
 
             </div>
         </div>
-        <div class="sm:w-1/3 flex flex-col gap-5 text-sm p-5 bg-slate-800 text-white dark:bg-transparent rounded-lg">
+        <!-- <div class="sm:w-1/3 flex flex-col gap-5 text-sm p-5 bg-slate-800 text-white dark:bg-transparent rounded-lg">
             <h3>YOU ARE FEW STEPS TO FUNDING YOUR WALLET! 👍💃🕺😎</h3>
             <div>
                 1️⃣. AUTOMATED FUNDING 🏦 @ #54 FEE: On this page scroll Up 🔝 & Transfer to either WEMA, MONIEPOINT, or
@@ -45,6 +45,6 @@
             <div>
                 For complaints/further assistance, please click on SUPPORT or WHATSAPP: 08034905635
             </div>
-        </div>
+        </div> -->
     </div>
 </x-filament-panels::page>

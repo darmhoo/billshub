@@ -6,6 +6,7 @@ use App\Models\DataBundle;
 use App\Models\DataType;
 use App\Models\Network;
 use App\Services\AirtimeService\AutoPilot;
+use App\Services\AirtimeService\EbenKData;
 use App\Services\AirtimeService\Megasub;
 use App\Services\AirtimeService\VTPass;
 use Filament\Forms\Components\Select;
@@ -280,6 +281,65 @@ class BuyData extends Page
             $vtpass = new Megasub($automation);
             $res = $vtpass->buyData($this->phoneNumber, DataBundle::where('id', $this->bundle)->first()->plan_id, $this->network, DataType::where('id', $this->data_type)->first()->name);
             // dd($res);
+            if($res['Detail']['success'] == "false"){
+                $transaction = auth()->user()->transaction()->create([
+                    'price' => $this->price,
+                    'transaction_type' => 'data',
+                    'status' => 'failed',
+                    'amount_before' => auth()->user()->balance,
+                    'description' => $bundle->name,
+                    'amount_after' => auth()->user()->balance,
+                    'api_message' => $res['Detail']['message'],
+                    'network' => Network::where('id', $this->network)->first()->name,
+                    'phone_number' => $this->phoneNumber,
+                ]);
+                return Notification::make()
+                ->title('Data purchase failed')
+                ->danger()
+                ->send();
+            }
+            if ($res['Detail']['info']['Success'] === '1') {
+                auth()->user()->withdraw($this->price);
+                $transaction = auth()->user()->transaction()->create([
+                    'price' => $this->price,
+                    'transaction_type' => 'data',
+                    'status' => 'completed',
+                    'reference' => $res['Detail']['info']['Reference_id'],
+                    'amount_before' => auth()->user()->balance + $this->price,
+                    'amount_after' => auth()->user()->balance,
+                    'description' => $bundle->name,
+                    'api_message' => $res['Detail']['info']['realresponse'],
+                    'network' => Network::where('id', $this->network)->first()->name,
+                    'phone_number' => $this->phoneNumber,
+                ]);
+                Notification::make()
+                    ->title('Airtime purchased successfully')
+                    ->success()
+                    ->send();
+            } else {
+                $transaction = auth()->user()->transaction()->create([
+                    'price' => $this->price,
+                    'transaction_type' => 'data',
+                    'status' => 'failed',
+                    'reference' => $res['Detail']['info']['Reference_id'],
+                    'amount_before' => auth()->user()->balance,
+                    'description' => $bundle->name,
+                    'amount_after' => auth()->user()->balance,
+                    'api_message' => $res['Detail']['info']['realresponse'],
+                    'network' => Network::where('id', $this->network)->first()->name,
+                    'phone_number' => $this->phoneNumber,
+                ]);
+                Notification::make()
+                    ->title('Data purchase failed')
+                    ->danger()
+                    ->send();
+            }
+        }
+
+        if ($automation->name === 'Ebenkdata') {
+            $eben = new EbenKData($automation);
+            $res = $eben->buyData($this->phoneNumber, DataBundle::where('id', $this->bundle)->first()->plan_id, $this->network, DataType::where('id', $this->data_type)->first()->name);
+            dd($res);
             if ($res['response_description'] === 'TRANSACTION SUCCESSFUL') {
                 auth()->user()->withdraw($this->price);
                 $transaction = auth()->user()->transaction()->create([

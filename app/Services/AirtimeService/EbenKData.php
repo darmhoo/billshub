@@ -8,7 +8,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
-class Megasub
+class EbenKData
 {
     private $automation;
     public function __construct(Automation $automation)
@@ -25,7 +25,7 @@ class Megasub
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->automation->api_key,
-        ])->post($this->automation->base_url . '/v1/airtime', [
+        ])->post($this->automation->base_url . 'data', [
                     'phone' => $phoneNumber,
                     'amount' => $amount,
                     'networkId' => $network,
@@ -44,36 +44,25 @@ class Megasub
         $networks = [
             'mtn' => 1,
             'glo' => 2,
-            'airtel' => 4,
-            '9mobile' => 3,
+            'airtel' => 3,
+            '9mobile' => 4,
         ];
         try {
-            // dd($planId, $network, $dataType);
+
             $n = Network::where('id', $network)->first()->name;
-            $dt = '';
-            if ($dataType == 'AWOOF/GIFTING') {
-                $dt = 'DIRECT GIFTING';
-            } else if ($dataType == 'SME') {
-                $dt = 'SME';
-            } else {
-                $dt = 'CORPORATE GIFTING';
-            }
-            $data = [
-                'action' => 'buy_data',
-                'mobile_number' => $phoneNumber,
-                'data_api_id' => $planId,
-                'network_api_id' => $networks[strtolower($n)],
-                'validatephonenetwork' => '0',
-                'duplication_check' => '1',
-            ];
-            // dd($this->automation->password);/
+            // dd($this->automation->api_key);
+
             $res = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->automation->api_key,
-                'Password' => $this->automation->password
-
-            ])->post($this->automation->base_url . '?action=buy_data', $data);
+                'Authorization' => 'Token ' . $this->automation->api_key,                
+            ])->post($this->automation->base_url . 'data', [
+                        'mobile_number' => $phoneNumber,
+                        'plan' => $planId,
+                        'network' => $networks[strtolower($n)],
+                        'Ported_number' => true,
+                        'Token' => $this->automation->api_key,
+                    ]);
 
 
             return $res->json();
