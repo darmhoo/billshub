@@ -65,6 +65,7 @@ class AppPanelProvider extends PanelProvider
                 AirtimeCash::class,
                 BuyData::class
             ])
+            ->plugin(\TomatoPHP\FilamentPWA\FilamentPWAPlugin::make())
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'App\\Filament\\App\\Widgets')
             ->widgets([
                 // Widgets\AccountWidget::class,
