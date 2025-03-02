@@ -4,10 +4,13 @@ namespace App\Filament\Pages\Auth;
 
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Actions\Action as FilamentAction;
+
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Auth\EditProfile as BaseEditProfile;
+use Filament\Support\Enums\Alignment;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
 use Throwable;
@@ -30,11 +33,13 @@ class EditProfile extends BaseEditProfile
                 TextInput::make('transaction_pin')
                     ->password()
                     ->disabled()
+                    ->suffix('Set Pin')
                     ->maxLength(8)
                     ->minLength(4)
                     ->suffixAction(
                         Action::make('resetPin')
                             ->label('Reset Pin')
+
                             ->icon('heroicon-o-arrow-path')
                             ->form([
                                 TextInput::make('password')
@@ -54,6 +59,7 @@ class EditProfile extends BaseEditProfile
                     )
                 ,
             ]);
+
     }
 
     public function resetPin($request)
@@ -78,6 +84,11 @@ class EditProfile extends BaseEditProfile
             ->title('Pin reset successfully')
             ->success()
             ->send();
+    }
+
+    public function getFormActionsAlignment(): string | Alignment
+    {
+        return Alignment::End;
     }
 
     public function save(): void
