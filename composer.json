@@ -12,7 +12,8 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "spatie/laravel-permission": "^6.13",
-        "stephenjude/laravel-wallet": "^2.0"
+        "stephenjude/laravel-wallet": "^2.0",
+        "tomatophp/filament-pwa": "^1.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
