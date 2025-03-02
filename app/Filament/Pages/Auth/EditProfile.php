@@ -31,14 +31,14 @@ class EditProfile extends BaseEditProfile
                     ->numeric()
                     ->maxLength(11)->disabled(),
                 TextInput::make('transaction_pin')
+                    ->label('Transaction PIN')
                     ->password()
                     ->disabled()
-                    ->suffix('Set Pin')
-                    ->maxLength(8)
-                    ->minLength(4)
+                    ->suffix('Set PIN')
+                    ->length(4)
                     ->suffixAction(
                         Action::make('resetPin')
-                            ->label('Reset Pin')
+                            ->label('Reset PIN')
 
                             ->icon('heroicon-o-arrow-path')
                             ->form([
@@ -48,12 +48,10 @@ class EditProfile extends BaseEditProfile
                                     ->required()
                                     ->label('Password'),
                                 TextInput::make('newPin')
-                                    ->length(8)
-                                    ->maxLength(8)
-                                    ->minLength(4)
+                                    ->length(4)
                                     ->password()
                                     ->required()
-                                    ->label('New Pin'),
+                                    ->label('New PIN'),
                             ])->action(fn($data) => $this->resetPin($data))
 
                     )
@@ -71,7 +69,7 @@ class EditProfile extends BaseEditProfile
             $this->addError('password', 'Invalid password');
             Notification::make()
                 ->title('Invalid password')
-                ->error()
+                ->danger()
                 ->send();
             return;
         }
@@ -86,7 +84,7 @@ class EditProfile extends BaseEditProfile
             ->send();
     }
 
-    public function getFormActionsAlignment(): string | Alignment
+    public function getFormActionsAlignment(): string|Alignment
     {
         return Alignment::End;
     }
