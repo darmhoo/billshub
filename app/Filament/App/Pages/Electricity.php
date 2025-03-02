@@ -148,6 +148,13 @@ class Electricity extends Page
     {
         $automation = Automation::where('name', 'VTPASS')->first();
         // dd($automation);
+        if (auth()->user()->balance < $this->amountToPurchase) {
+            Notification::make()
+                ->title('Insufficient balance')
+                ->danger()
+                ->send();
+            return;
+        }
         $vtpass = new \App\Services\AirtimeService\VTPass($automation);
         $response = $vtpass->payElectricity(meter_number: $this->meter_number, amount: $this->amountToPurchase, serviceId: $this->electricityProvider, type: $this->type, phone: $this->phoneNumber);
         // dd($response);
