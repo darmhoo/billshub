@@ -281,7 +281,7 @@ class BuyData extends Page
             $vtpass = new Megasub($automation);
             $res = $vtpass->buyData($this->phoneNumber, DataBundle::where('id', $this->bundle)->first()->plan_id, $this->network, DataType::where('id', $this->data_type)->first()->name);
             // dd($res);
-            if($res['Detail']['success'] == "false"){
+            if ($res['Detail']['success'] == "false") {
                 $transaction = auth()->user()->transaction()->create([
                     'price' => $this->price,
                     'transaction_type' => 'data',
@@ -294,9 +294,9 @@ class BuyData extends Page
                     'phone_number' => $this->phoneNumber,
                 ]);
                 return Notification::make()
-                ->title('Data purchase failed')
-                ->danger()
-                ->send();
+                    ->title('Data purchase failed')
+                    ->danger()
+                    ->send();
             }
             if ($res['Detail']['info']['Success'] === '1') {
                 auth()->user()->withdraw($this->price);
@@ -313,7 +313,7 @@ class BuyData extends Page
                     'phone_number' => $this->phoneNumber,
                 ]);
                 Notification::make()
-                    ->title('Airtime purchased successfully')
+                    ->title('Data purchased successfully')
                     ->success()
                     ->send();
             } else {
@@ -372,7 +372,7 @@ class BuyData extends Page
                     'phone_number' => $this->phoneNumber,
                 ]);
                 Notification::make()
-                    ->title('Airtime purchase failed')
+                    ->title('Data purchase failed')
                     ->danger()
                     ->send();
             }

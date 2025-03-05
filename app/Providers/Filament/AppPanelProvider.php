@@ -8,13 +8,12 @@ use App\Filament\App\Pages\BuyData;
 use App\Filament\App\Pages\Dashboard;
 use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Pages\Auth\RegisterUser;
-use App\Filament\Resources\AirtimeBundleResource;
+use App\Filament\Pages\Auth\RequestPasswordReset;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Notifications\Livewire\Notifications;
-use Filament\Notifications\Notification;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Enums\Alignment;
@@ -38,7 +37,7 @@ class AppPanelProvider extends PanelProvider
             ->login()
             ->registration(RegisterUser::class)
             ->emailVerification()
-            ->passwordReset()
+            ->passwordReset(RequestPasswordReset::class)
             ->profile(EditProfile::class, isSimple: false)
             ->sidebarCollapsibleOnDesktop()
             ->colors([
