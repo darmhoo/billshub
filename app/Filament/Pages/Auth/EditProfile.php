@@ -48,11 +48,13 @@ class EditProfile extends BaseEditProfile
                                     ->required()
                                     ->label('Password'),
                                 TextInput::make('newPin')
-                                    ->length(4)
                                     ->numeric()
+                                    ->inputMode('numeric')
                                     ->required()
                                     ->placeholder('4 digit pin')
-                                    ->label('New PIN'),
+                                    ->label('New PIN')
+                                    ->length(4)
+                                    ->maxLength(4)
                             ])->action(fn($data) => $this->resetPin($data))
 
                     )
