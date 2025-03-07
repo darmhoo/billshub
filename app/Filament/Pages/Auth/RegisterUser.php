@@ -23,7 +23,8 @@ class RegisterUser extends BaseRegister
                 $this->getEmailFormComponent(),
                 TextInput::make('phone_number')
                     ->required()
-                    ->length(11),
+                    ->length(11)
+                    ->unique(),
 
                 $this->getPasswordFormComponent(),
                 $this->getPasswordConfirmationFormComponent(),
