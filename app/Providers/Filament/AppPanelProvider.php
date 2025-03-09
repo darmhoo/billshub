@@ -53,6 +53,7 @@ class AppPanelProvider extends PanelProvider
                 'Services',
             ])
             ->authGuard('web')
+            ->plugin(\TomatoPHP\FilamentPWA\FilamentPWAPlugin::make()->allowPWASettings(false))
             
             ->viteTheme('resources/css/app.css')
             ->font('poppins')
