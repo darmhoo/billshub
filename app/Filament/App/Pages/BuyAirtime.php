@@ -123,7 +123,7 @@ class BuyAirtime extends Page implements HasForms
                             TextInput::make('transaction_pin')
                                 ->required()
                                 ->label('PIN')
-                                ->password()
+                                ->numeric()
                         ])
                         ->action(function (array $data) {
 

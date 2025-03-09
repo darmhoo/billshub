@@ -178,7 +178,7 @@ class BuyData extends Page
                         ->form([
                             TextInput::make('transaction_pin')
                                 ->required()
-                                ->password()
+                                ->numeric()
                                 ->label('PIN')
                                 ->maxLength(8)
                                 ->minLength(4)
