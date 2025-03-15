@@ -11,7 +11,6 @@ use Filament\Forms\Form;
 use Filament\Http\Responses\Auth\Contracts\RegistrationResponse;
 use Filament\Notifications\Notification;
 use Filament\Pages\Auth\Register as BaseRegister;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 
 class RegisterUser extends BaseRegister
 {
@@ -65,7 +64,6 @@ class RegisterUser extends BaseRegister
         // app()->bind(
         //     SendEmailVerificationNotification::class,
         //     CustomSendEmailVerificationNotification::class
-
         // );
         event(new Registered($user));
 
