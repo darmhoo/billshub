@@ -78,7 +78,7 @@ class AppPanelProvider extends PanelProvider
                 AuthenticateSession::class,
                     // EnsureEmailIsVerified::class,
                 ShareErrorsFromSession::class,
-                // VerifyCsrfToken::class,
+                VerifyCsrfToken::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
