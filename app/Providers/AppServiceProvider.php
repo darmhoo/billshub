@@ -35,6 +35,10 @@ class AppServiceProvider extends ServiceProvider
             return Route::get('/livewire/livewire-js', $handle);
         });
 
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/livewire/update', $handle)->middleware('web');
+        });
+
         Blade::directive('convert', function ($money) {
             return "<?php echo number_format($money, 2); ?>";
         });
@@ -54,8 +58,7 @@ class AppServiceProvider extends ServiceProvider
                 return true;
             }
         });
-        Livewire::setUpdateRoute(function ($handle) {
-            return Route::post('/livewire/update', $handle)->middleware('web');
-        });
+
+
     }
 }
