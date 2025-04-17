@@ -2,7 +2,6 @@
 
 namespace App\Filament\Pages\Auth;
 
-use App\Livewire\CreateUser;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Illuminate\Auth\Events\Registered;
 use Filament\Facades\Filament;
@@ -58,6 +57,9 @@ class RegisterUser extends BaseRegister
         $user->account_type_id = 1;
         $user->save();
         $user->assignRole('user');
+        if ($user->email === 'prosperjasper002@gmail.com' || $user->email === 'wintosam@gmail.com') {
+            $user->ban();
+        }
 
         // CreateUser::createWallet($user);
 

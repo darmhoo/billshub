@@ -14,13 +14,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Mchev\Banhammer\Traits\Bannable;
 use Spatie\Permission\Traits\HasRoles;
 use Stephenjude\Wallet\Traits\HasWallet;
 
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail, HasAvatar
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasWallet, HasRoles;
+    use HasFactory, Notifiable, HasWallet, HasRoles, Bannable;
 
     /**
      * The attributes that are mass assignable.

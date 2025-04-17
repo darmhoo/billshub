@@ -7,6 +7,7 @@ use App\Filament\App\Pages\BuyAirtime;
 use App\Filament\App\Pages\BuyData;
 use App\Filament\App\Pages\Dashboard;
 use App\Filament\Pages\Auth\EditProfile;
+use App\Filament\Pages\Auth\LoginUser;
 use App\Filament\Pages\Auth\RegisterUser;
 use App\Filament\Pages\Auth\RequestPasswordReset;
 use Filament\Http\Middleware\Authenticate;

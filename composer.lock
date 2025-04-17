@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1638a28b6ecec72ecfb89d784caa4c9a",
+    "content-hash": "aee36a63a1ec9de3a6511f275992b4dd",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -3375,6 +3375,74 @@
                 "source": "https://github.com/Masterminds/html5-php/tree/2.9.0"
             },
             "time": "2024-03-31T07:05:07+00:00"
+        },
+        {
+            "name": "mchev/banhammer",
+            "version": "v2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mchev/banhammer.git",
+                "reference": "a57318822959036639bc1b7929be7d24ba376457"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mchev/banhammer/zipball/a57318822959036639bc1b7929be7d24ba376457",
+                "reference": "a57318822959036639bc1b7929be7d24ba376457",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
+                "phpunit/phpunit": "^9.6|^10.5|^11.5.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mchev\\Banhammer\\BanhammerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Mchev\\Banhammer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "mchev",
+                    "email": "martin@pegase.io",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Banhammer for Laravel allows you to ban any Model by key and by IP.",
+            "homepage": "https://github.com/mchev/banhammer",
+            "keywords": [
+                "IP",
+                "ban",
+                "bannable",
+                "bans-for-laravel",
+                "country",
+                "laravel",
+                "mchev"
+            ],
+            "support": {
+                "issues": "https://github.com/mchev/banhammer/issues",
+                "source": "https://github.com/mchev/banhammer/tree/v2.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/mchev",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-03-17T13:49:24+00:00"
         },
         {
             "name": "monolog/monolog",
