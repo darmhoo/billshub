@@ -26,6 +26,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Mchev\Banhammer\Middleware\AuthBanned;
 
 class AppPanelProvider extends PanelProvider
 {
@@ -86,6 +87,7 @@ class AppPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+                AuthBanned::class,
                 EnsureEmailIsVerified::class,
             ]);
     }
