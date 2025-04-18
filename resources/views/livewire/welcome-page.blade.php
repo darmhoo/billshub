@@ -2,7 +2,7 @@
     <header class="m-5 z-20">
         <div class="py-4 px-2 lg:mx-4 xl:mx-12 ">
             <div class="flex justify-between">
-                <h2 class="text-red-600 text-2xl">Gbills247.com</h2>
+                <h2 class="text-red-600 text-2xl">GraciousBills 247 Services(Gbills247.com)</h2>
                 <nav class="flex items-center justify-between flex-wrap gap-6 relative">
                     <div class="block lg:hidden">
                         <button
@@ -45,7 +45,7 @@
                         <h2 class="text-4xl font-bold sm:text-5xl">
 
                             <span class="hidden sm:block text-4xl">
-                                Gbills247.com
+                                GraciousBills 247
                             </span>
                         </h2>
 
