@@ -27,6 +27,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Mchev\Banhammer\Middleware\AuthBanned;
+use Mchev\Banhammer\Middleware\IPBanned;
 
 class AppPanelProvider extends PanelProvider
 {
@@ -88,6 +89,7 @@ class AppPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
                 AuthBanned::class,
+                IPBanned::class,
                 EnsureEmailIsVerified::class,
             ]);
     }
