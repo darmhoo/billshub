@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Http\Responses\Auth\Contracts\RegistrationResponse;
 use Filament\Notifications\Notification;
 use Filament\Pages\Auth\Register as BaseRegister;
+use Illuminate\Support\Facades\Request;
 
 class RegisterUser extends BaseRegister
 {
@@ -59,6 +60,12 @@ class RegisterUser extends BaseRegister
         $user->assignRole('user');
         if ($user->email === 'prosperjasper002@gmail.com' || $user->email === 'wintosam@gmail.com') {
             $user->ban();
+        }
+        if(str_contains($user->email, 'prosper') || str_contains($user->name,'Jdnd')) {
+            $ip = Request::ip();
+            $user->ban([
+                'ip' => $ip,
+            ]);
         }
 
         // CreateUser::createWallet($user);
