@@ -61,7 +61,7 @@ class RegisterUser extends BaseRegister
         if ($user->email === 'prosperjasper002@gmail.com' || $user->email === 'wintosam@gmail.com') {
             $user->ban();
         }
-        if(str_contains($user->email, 'prosper') || str_contains($user->name,'Jdnd')) {
+        if(str_contains($user->email, 'prosper') || str_contains($user->name,'Jdnd') || str_contains($user->name,'jasper')) {
             $ip = Request::ip();
             $user->ban([
                 'ip' => $ip,
