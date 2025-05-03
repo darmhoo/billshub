@@ -4,17 +4,21 @@ namespace App\Filament\App\Pages;
 
 use App\Models\Automation;
 use App\Models\ElectricityProvider;
+use App\Traits\TransactionTrait;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Auth;
 
 class Electricity extends Page
 {
+    use TransactionTrait;
     protected static ?string $navigationIcon = 'heroicon-o-light-bulb';
 
     protected static string $view = 'filament.app.pages.electricity';
@@ -31,6 +35,9 @@ class Electricity extends Page
     public ?string $phoneNumber = null;
 
     public $verifiedAccount = null;
+    public ?bool $isVerified = false;
+    public ?bool $insufficient = null;
+
 
 
 
@@ -46,6 +53,7 @@ class Electricity extends Page
                 Select::make('electricityProvider')
                     ->label('Electricity Provider')
                     ->options(\App\Models\ElectricityProvider::all()->pluck('name', 'id'))
+                    ->live()
                     ->required(),
                 Select::make('type')
                     ->label('Type')
@@ -53,6 +61,7 @@ class Electricity extends Page
                         'prepaid' => 'Prepaid',
                         'postpaid' => 'Postpaid',
                     ])
+                    ->live()
                     ->required(),
                 TextInput::make('meter_number')
                     ->label('Meter Number')
@@ -61,24 +70,30 @@ class Electricity extends Page
                     ->suffix('Verify')
                     ->suffixAction(
                         Action::make('validate_meter_number')
+                            ->disabled(function (Get $get) {
+                                return $get('meter_number') === null || $get('electricityProvider') === null || $get('type') === null;
+                            })
                             ->icon('heroicon-o-check-circle')
                             ->action(function (Get $get) use ($vtpass) {
                                 // dd($get('meter_number'));
                                 $response = $vtpass->verifyMeterNumber($get('meter_number'), $get('electricityProvider'), $get('type'));
                                 // dd($response);
-                                if (gettype($response) === 'array') {
+                                if (array_key_exists('error', $response['content'])) {
                                     // dd($response);
-                                    $this->verifiedAccount = $response;
-                                    return Notification::make()
-                                        ->title('Meter Number Validated')
+                                    $this->isVerified = false;
+                                    Notification::make()
+                                        ->warning()
+                                        ->title('An Error occured')
+                                        ->body($response['content']['error'])
+                                        ->send();
+                                } else {
+                                    $this->verifiedAccount = $response['content'];
+                                    $this->isVerified = true;
+                                    Notification::make()
+                                        ->title('Meter Number Verified')
                                         ->body('Meter number is valid')
                                         ->send();
                                 }
-
-                                return Notification::make()
-                                    ->title('An Error occured')
-                                    ->body('Meter number is invalid')
-                                    ->send();
                             })
                     ),
 
@@ -87,13 +102,20 @@ class Electricity extends Page
                     ->required()
                     ->live()
                     ->prefix('NGN')
+                    ->afterStateUpdated(function (Set $set, $state) {
+                        $set('insufficient', !$this->checkBalance(Auth::user(), $state));                        
+                    })
                     ->disabled(function (Get $get) {
                         return $this->verifiedAccount === null;
                     }),
 
                 TextInput::make('phoneNumber')
-                    ->label('Phone Number')
                     ->required()
+                    ->tel()
+                    ->telRegex('/0([7,8,9])([0,1])\d{8}$|234([7,8,9])([0,1])\d{8}$/')
+                    ->placeholder('08026201234')
+                    ->length(11)
+                    ->live()
                     ->disabled(function (Get $get) {
                         return $this->verifiedAccount === null;
                     }),
@@ -103,6 +125,9 @@ class Electricity extends Page
                         ->extraAttributes([
                             'class' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full md:w-1/2',
                         ])
+                        ->disabled(function (Get $get) {
+                            return $this->checkBalance(Auth::user(), $get('amountToPurchase')) !== true  || $get('amountToPurchase') === null || $get('phoneNumber') === null || $this->verifiedAccount === null;
+                        })
                         ->requiresConfirmation()
                         ->modalHeading('Buy Airtime')
                         ->modalDescription(function (Get $get) {
@@ -146,13 +171,17 @@ class Electricity extends Page
 
     public function save()
     {
+        $data = $this->form->getState();
+
         $automation = Automation::where('name', 'VTPASS')->first();
         // dd($automation);
-        if (auth()->user()->balance < $this->amountToPurchase) {
+        if ($this->checkBalance(Auth::user(), $data['amountToPurchase']) !== true) {
             Notification::make()
+                ->warning()
                 ->title('Insufficient balance')
-                ->danger()
+                ->body('You do not have enough balance to complete this transaction!!!')
                 ->send();
+
             return;
         }
         $vtpass = new \App\Services\AirtimeService\VTPass($automation);

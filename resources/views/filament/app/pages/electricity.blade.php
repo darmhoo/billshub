@@ -54,6 +54,17 @@
     </div>
     <div class="w-full sm:flex gap-5">
         <div class="sm:w-3/5">
+            @if ($this->insufficient)
+            <div class="text-red-500">
+                <p>Insufficient balance. Please fund your account.</p>
+            </div>
+
+        @else
+            <div class="text-green-500">
+                <p>Balance: {{ auth()->user()->balance }}</p>
+            </div>
+
+        @endif
             <form wire:submit="save">
                 {{$this->form}}
 
@@ -61,7 +72,7 @@
 
 
         </div>
-        @if($verifiedAccount)
+        @if($isVerified)
 
 
             <div class="sm:w-2/5">
@@ -74,19 +85,19 @@
                         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                             <dt class="text-sm/6 font-medium text-gray-900">Account Name</dt>
                             <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                {{$verifiedAccount['content']['Customer_Name']}}
+                                {{$verifiedAccount['Customer_Name']}}
                             </dd>
                         </div>
                         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                             <dt class="text-sm/6 font-medium text-gray-900">Address</dt>
                             <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                {{$verifiedAccount['content']['Address']}}
+                                {{$verifiedAccount['Address']}}
                             </dd>
                         </div>
                         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                             <dt class="text-sm/6 font-medium text-gray-900">Meter Type</dt>
                             <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                {{$verifiedAccount['content']['Meter_Type']}}
+                                {{$verifiedAccount['Meter_Type']}}
                             </dd>
                         </div>
 
