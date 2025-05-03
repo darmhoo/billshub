@@ -16,7 +16,19 @@
         </div>
     </div>
     <div class="sm:flex w-full sm:gap-5">
+
         <div class="sm:w-3/5">
+            @if ($this->insufficient)
+                <div class="text-red-500">
+                    <p>Insufficient balance. Please fund your account.</p>
+                </div>
+
+            @else
+                <div class="text-green-500">
+                    <p>Balance: {{ auth()->user()->balance }}</p>
+                </div>
+
+            @endif
             <form wire:submit="save">
                 {{$this->form}}
 

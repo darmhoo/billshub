@@ -9,20 +9,25 @@ use App\Services\AirtimeService\AutoPilot;
 use App\Services\AirtimeService\EbenKData;
 use App\Services\AirtimeService\Megasub;
 use App\Services\AirtimeService\VTPass;
+use App\Traits\TransactionTrait;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Actions;
+use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Request;
 
-class BuyData extends Page
+class BuyData extends Page implements HasForms
 {
+    use TransactionTrait, InteractsWithForms;
     protected static ?string $navigationIcon = 'heroicon-o-wifi';
 
     protected static string $view = 'filament.app.pages.buy-data';
@@ -37,6 +42,8 @@ class BuyData extends Page
     public ?string $data_type = null;
 
     public ?string $phoneNumber = null;
+    public ?bool $insufficient = null;
+
 
 
     public function form(Form $form): Form
@@ -142,7 +149,8 @@ class BuyData extends Page
 
                             }
                         }
-                        $this->validateOnly('bundle');
+                        $set('insufficient', !$this->checkBalance(Auth::user(), $state));
+
 
                     })
                     ->placeholder('Choose Bundle'),
@@ -155,13 +163,14 @@ class BuyData extends Page
 
                 TextInput::make('phoneNumber')
                     ->required()
-                    ->placeholder('08026201234')
                     ->tel()
+                    ->telRegex('/0([7,8,9])([0,1])\d{8}$|234([7,8,9])([0,1])\d{8}$/')
+                    ->placeholder('08026201234')
                     ->length(11)
+                    ->live()
+
                     ->autocomplete()
-                    ->afterStateUpdated(function (Set $set, $state, Get $get) {
-                        $this->validateOnly('phoneNumber');
-                    }),
+                ,
 
 
                 Actions::make([
@@ -169,6 +178,9 @@ class BuyData extends Page
                         ->extraAttributes([
                             'class' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full md:w-1/2',
                         ])
+                        ->disabled(function (Set $set, $state, Get $get) {
+                            return $this->checkBalance(Auth::user(), $get('price')) !== true || $get('network') == null || $get('phoneNumber') == null || $get('price') == null || $get('bundle') == null || $get('data_type') == null;
+                        })
                         ->requiresConfirmation()
                         ->modalHeading('Buy Data')
                         ->modalDescription(function (Get $get) {
@@ -212,13 +224,7 @@ class BuyData extends Page
     public function save()
     {
         // dd('here');
-        $this->validate([
-            'network' => 'required',
-            'bundle' => 'required',
-            'price' => 'required',
-            'data_type' => 'required',
-            'phoneNumber' => 'required',
-        ]);
+        $this->form->getState();
 
 
         if (auth()->user()->balance < $this->price) {
