@@ -3,27 +3,27 @@
 namespace App\Filament\App\Pages;
 
 use App\Models\AirtimeBundle;
-use App\Models\Automation;
 use App\Models\Network;
-use App\Models\User;
 use App\Services\AirtimeService\AutoPilot;
 use App\Services\AirtimeService\VTPass;
+use App\Traits\TransactionTrait;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Illuminate\Support\Collection;
-use Filament\Notifications\Livewire\Notifications;
-use Request;
+use Illuminate\Support\Facades\Auth;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class BuyAirtime extends Page implements HasForms
 {
+    use InteractsWithForms, TransactionTrait;
     protected static ?string $navigationIcon = 'heroicon-o-phone-arrow-down-left';
 
     protected static string $view = 'filament.app.pages.buy-airtime';
@@ -36,42 +36,33 @@ class BuyAirtime extends Page implements HasForms
 
     public ?string $amountToPay = null;
 
+    public ?bool $insufficient = null;
+
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
                 Select::make('network')
-                    // ->options(Network::query()->pluck('name', 'id'))
                     ->options(function (): array {
                         return Network::all()->pluck('name', 'id')->all();
                     })
                     ->required()
                     ->translateLabel()
-
                     ->placeholder('Choose network')
                     ->live()
                     ->afterStateUpdated(function (Set $set, $state, Get $get) {
-                        $discount = AirtimeBundle::query()
-                            ->where('network_id', $state)
-                            ->where('account_type_id', auth()->user()->account_type_id)
-                            ->where('is_active', 'active')
-                            ->first();
-                        // dd($discount);
-                        if ($discount) {
-                            $set('amountToPay', $get('amountToPurchase') - ($discount->discount * $get('amountToPurchase') / 100));
-                        } else {
-                            $set('amountToPay', $get('amountToPurchase'));
-
-                        }
+                        $set('amountToPay', null);
+                        $set('amountToPurchase', null);
                     }),
+
                 TextInput::make('amountToPurchase')
                     ->numeric()
                     ->prefix('₦')
                     ->required()
                     ->live()
                     ->afterStateUpdated(function (Set $set, $state, Get $get) {
-                        $this->validateOnly('amountToPurchase');
+                        // $this->validateOnly('amountToPurchase');
                         $discount = AirtimeBundle::query()
                             ->where('network_id', $get('network'))
                             ->where('account_type_id', auth()->user()->account_type_id)
@@ -83,6 +74,7 @@ class BuyAirtime extends Page implements HasForms
                             $set('amountToPay', $state);
 
                         }
+                        $set('insufficient', !$this->checkBalance(Auth::user(), $state));
                     })
                     ->disabled(function (Set $set, $state, Get $get) {
                         return $get('network') == null;
@@ -97,22 +89,26 @@ class BuyAirtime extends Page implements HasForms
 
                 TextInput::make('phoneNumber')
                     ->required()
+                    ->tel()
+                    ->telRegex('/0([7,8,9])([0,1])\d{8}$|234([7,8,9])([0,1])\d{8}$/')
+                    ->placeholder('08026201234')
+                    ->length(11)
                     ->live()
                     ->afterStateUpdated(function () {
-                        $this->validateOnly('phoneNumber');
-
+                        // $this->validateOnly('phoneNumber');
+            
                     })
                     ->autocomplete()
-                    ->tel()
-                    ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
-                    ->placeholder('08026201234')
-                    ->length(11),
+                ,
 
                 Actions::make([
                     Action::make('submit')
                         ->extraAttributes([
                             'class' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full md:w-1/2',
                         ])
+                        ->disabled(function (Set $set, $state, Get $get) {
+                            return $this->checkBalance(Auth::user(), $get('amountToPay')) !== true || $get('network') == null || $get('phoneNumber') == null || $get('amountToPurchase') == null;
+                        })
                         ->requiresConfirmation()
                         ->modalHeading('Buy Airtime')
                         ->modalDescription(function (Get $get) {
@@ -126,49 +122,34 @@ class BuyAirtime extends Page implements HasForms
                                 ->numeric()
                         ])
                         ->action(function (array $data) {
-
-
-                            if (auth()->user()->transaction_pin === null) {
-                                return Notification::make()
-                                    ->warning()
-                                    ->title('Invalid Pin')
-                                    ->body('You need to set your transaction pin before you can proceed!!!')
-                                    ->send();
-                            } else if (auth()->user()->transaction_pin !== $data['transaction_pin']) {
-                                return Notification::make()
-                                    ->warning()
-                                    ->title('Invalid Pin')
-                                    ->body('Pin is incorrect!!!')
-                                    ->send();
-                            } else {
-                                $this->save();
-                            }
-
-                        })
+                            $this->checkPin($data['transaction_pin']);
+                        }),
                 ])
 
             ])
-            ->columns(2)
-
-
-        ;
+            ->columns(2);
     }
-    public function save()
+
+    public function create()
     {
         // dd('here');
+        $data = $this->form->getState();
 
         $discount = AirtimeBundle::query()
-            ->where('network_id', $this->network)
+            ->where('network_id', $data['network'])
             ->where('account_type_id', auth()->user()->account_type_id)
             ->first();
         $real = $discount ? $this->amountToPurchase - ($discount->discount * $this->amountToPurchase / 100) : $this->amountToPurchase;
-        if (auth()->user()->balance < $real) {
+        if ($this->checkBalance(Auth::user(), $real) !== true) {
             Notification::make()
+                ->warning()
                 ->title('Insufficient balance')
-                ->danger()
+                ->body('You do not have enough balance to complete this transaction!!!')
                 ->send();
+
             return;
         }
+        // dd($real);
 
         $automation = $discount->automation;
         // dd($automation);
@@ -176,7 +157,8 @@ class BuyAirtime extends Page implements HasForms
             $autopilot = new AutoPilot($automation);
             $res = $autopilot->sendAirtime($this->phoneNumber, $this->amountToPurchase, $this->network, );
             if ($res['status'] === true) {
-                auth()->user()->withdraw($real);
+                $this->deductBalance(Auth::user(), $real);
+                //TODO clean up this code
                 $transaction = auth()->user()->transaction()->create([
                     'price' => $real,
                     'transaction_type' => 'airtime',
@@ -188,10 +170,7 @@ class BuyAirtime extends Page implements HasForms
                     'network' => Network::where('id', $this->network)->first()->name,
                     'phone_number' => $this->phoneNumber,
                 ]);
-                $this->phoneNumber = null;
-                $this->amountToPurchase = null;
-                $this->amountToPay = null;
-                $this->network = null;
+                $this->form->fill();
                 Notification::make()
                     ->title('Airtime purchased successfully')
                     ->success()
@@ -219,7 +198,7 @@ class BuyAirtime extends Page implements HasForms
             $res = $vtpass->sendAirtime($this->phoneNumber, $this->amountToPurchase, $this->network, );
             // dd($res);
             if ($res['response_description'] === 'TRANSACTION SUCCESSFUL') {
-                auth()->user()->withdraw($real);
+                $this->deductBalance(Auth::user(), $real);
                 $transaction = auth()->user()->transaction()->create([
                     'price' => $real,
                     'transaction_type' => 'airtime',
@@ -231,6 +210,8 @@ class BuyAirtime extends Page implements HasForms
                     'network' => Network::where('id', $this->network)->first()->name,
                     'phone_number' => $this->phoneNumber,
                 ]);
+                $this->form->fill();
+
                 Notification::make()
                     ->title('Airtime purchased successfully')
                     ->success()
@@ -254,6 +235,7 @@ class BuyAirtime extends Page implements HasForms
             }
         }
 
+
         //Todo wallet check
 
         //Todo use airtime api 
@@ -261,6 +243,28 @@ class BuyAirtime extends Page implements HasForms
         //Todo Log transaction
 
     }
+    private function checkPin($pin)
+    {
+        // $this->form->getState();
+        $user = Auth::user();
+        if ($user->transaction_pin === null) {
+            return Notification::make()
+                ->warning()
+                ->title('Invalid Pin')
+                ->body('You need to set your transaction pin before you can proceed!!!')
+                ->send();
+        } else if ($user->transaction_pin !== $pin) {
+            return Notification::make()
+                ->warning()
+                ->title('Invalid Pin')
+                ->body('Pin is incorrect!!!')
+                ->send();
+        } else {
+            $this->create();
+        }
+    }
+
+
 
 
 

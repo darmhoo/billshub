@@ -32,7 +32,7 @@ class Payvessel
                 'businessid' => $this->virtualAccount->merchant_code,
                 'account_type' => "STATIC"
             ];
-            dd($data);
+            // dd($data);
             $virtualAccountName = 'PVS-' . 'Gbills-' . substr($customerName, 0, 5);
 
 
