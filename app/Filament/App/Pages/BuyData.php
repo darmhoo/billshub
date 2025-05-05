@@ -119,7 +119,7 @@ class BuyData extends Page implements HasForms
                         ->where('data_type_id', '=', $get('data_type'))
                         ->where('is_active', true)
 
-                        ->where('account_type_id', auth()->user()->account_type_id)
+                        ->where('account_type_id', Auth::user()->account_type_id)
 
                         ->pluck('name', 'id'))
                     ->disabled(function (Get $get): bool {
@@ -196,13 +196,13 @@ class BuyData extends Page implements HasForms
                                 ->minLength(4)
                         ])
                         ->action(function (array $data) {
-                            if (auth()->user()->transaction_pin === null) {
+                            if (Auth::user()->transaction_pin === null) {
                                 return Notification::make()
                                     ->warning()
                                     ->title('Invalid Pin')
                                     ->body('You need to set your transaction pin before you can proceed!!!')
                                     ->send();
-                            } else if (auth()->user()->transaction_pin !== $data['transaction_pin']) {
+                            } else if (Auth::user()->transaction_pin !== $data['transaction_pin']) {
                                 return Notification::make()
                                     ->warning()
                                     ->title('Invalid Pin')
@@ -224,10 +224,14 @@ class BuyData extends Page implements HasForms
     public function save()
     {
         // dd('here');
+        /**
+         * @var \App\Models\User
+         */
+        $user = Auth::user();
         $this->form->getState();
 
 
-        if (auth()->user()->balance < $this->price) {
+        if ($user->balance < $this->price) {
             Notification::make()
                 ->title('Insufficient balance')
                 ->danger()
@@ -241,35 +245,34 @@ class BuyData extends Page implements HasForms
             $autopilot = new AutoPilot($automation);
             $res = $autopilot->buyData($this->phoneNumber, DataBundle::where('id', $this->bundle)->first()->plan_id, $this->network, DataType::where('id', $this->data_type)->first()->name);
             if ($res['status'] === true) {
-                auth()->user()->withdraw($this->price);
-                $transaction = auth()->user()->transaction()->create([
+                $user->withdraw($this->price);
+                $transaction = $user->transaction()->create([
                     'price' => $this->price,
                     'transaction_type' => 'data',
                     'status' => 'completed',
                     'reference' => $res['data']['reference'],
-                    'amount_before' => auth()->user()->balance + $this->price,
-                    'amount_after' => auth()->user()->balance,
+                    'amount_before' => $user->balance + $this->price,
+                    'amount_after' => $user->balance,
                     'description' => $bundle->name,
                     'api_message' => $res['data']['message'],
                     'network' => Network::where('id', $this->network)->first()->name,
                     'phone_number' => $this->phoneNumber,
                 ]);
                 $this->phoneNumber = null;
-                $this->amountToPurchase = null;
-                $this->amountToPay = null;
+
                 $this->network = null;
                 Notification::make()
                     ->title('Data purchased successfully')
                     ->success()
                     ->send();
             } else {
-                $transaction = auth()->user()->transaction()->create([
+                $transaction = $user->transaction()->create([
                     'price' => $this->price,
                     'transaction_type' => 'data',
                     'status' => 'failed',
                     'reference' => $res['data']['reference'] ?? '',
-                    'amount_before' => auth()->user()->balance,
-                    'amount_after' => auth()->user()->balance,
+                    'amount_before' => $user->balance,
+                    'amount_after' => $user->balance,
                     'description' => $bundle->name,
                     'api_message' => $res['data']['message'],
                     'network' => Network::where('id', $this->network)->first()->name,
@@ -288,13 +291,13 @@ class BuyData extends Page implements HasForms
             $res = $vtpass->buyData($this->phoneNumber, DataBundle::where('id', $this->bundle)->first()->plan_id, $this->network, DataType::where('id', $this->data_type)->first()->name);
             // dd($res);
             if ($res['Detail']['success'] == "false") {
-                $transaction = auth()->user()->transaction()->create([
+                $transaction = $user->transaction()->create([
                     'price' => $this->price,
                     'transaction_type' => 'data',
                     'status' => 'failed',
-                    'amount_before' => auth()->user()->balance,
+                    'amount_before' => $user->balance,
                     'description' => $bundle->name,
-                    'amount_after' => auth()->user()->balance,
+                    'amount_after' => $user->balance,
                     'api_message' => $res['Detail']['message'],
                     'network' => Network::where('id', $this->network)->first()->name,
                     'phone_number' => $this->phoneNumber,
@@ -305,14 +308,14 @@ class BuyData extends Page implements HasForms
                     ->send();
             }
             if ($res['Detail']['info']['Success'] === '1') {
-                auth()->user()->withdraw($this->price);
-                $transaction = auth()->user()->transaction()->create([
+                $user->withdraw($this->price);
+                $transaction = $user->transaction()->create([
                     'price' => $this->price,
                     'transaction_type' => 'data',
                     'status' => 'completed',
                     'reference' => $res['Detail']['info']['Reference_id'],
-                    'amount_before' => auth()->user()->balance + $this->price,
-                    'amount_after' => auth()->user()->balance,
+                    'amount_before' => $user->balance + $this->price,
+                    'amount_after' => $user->balance,
                     'description' => $bundle->name,
                     'api_message' => $res['Detail']['info']['realresponse'],
                     'network' => Network::where('id', $this->network)->first()->name,
@@ -323,14 +326,14 @@ class BuyData extends Page implements HasForms
                     ->success()
                     ->send();
             } else {
-                $transaction = auth()->user()->transaction()->create([
+                $transaction = $user->transaction()->create([
                     'price' => $this->price,
                     'transaction_type' => 'data',
                     'status' => 'failed',
                     'reference' => $res['Detail']['info']['Reference_id'],
-                    'amount_before' => auth()->user()->balance,
+                    'amount_before' => $user->balance,
                     'description' => $bundle->name,
-                    'amount_after' => auth()->user()->balance,
+                    'amount_after' => $user->balance,
                     'api_message' => $res['Detail']['info']['realresponse'],
                     'network' => Network::where('id', $this->network)->first()->name,
                     'phone_number' => $this->phoneNumber,
@@ -347,14 +350,14 @@ class BuyData extends Page implements HasForms
             $res = $eben->buyData($this->phoneNumber, DataBundle::where('id', $this->bundle)->first()->plan_id, $this->network, DataType::where('id', $this->data_type)->first()->name);
             dd($res);
             if ($res['response_description'] === 'TRANSACTION SUCCESSFUL') {
-                auth()->user()->withdraw($this->price);
-                $transaction = auth()->user()->transaction()->create([
+                $user->withdraw($this->price);
+                $transaction = $user->transaction()->create([
                     'price' => $this->price,
                     'transaction_type' => 'airtime',
                     'status' => 'completed',
                     'reference' => $res['requestId'],
-                    'amount_before' => auth()->user()->balance + $this->price,
-                    'amount_after' => auth()->user()->balance,
+                    'amount_before' => $user->balance + $this->price,
+                    'amount_after' => $user->balance,
                     'description' => $bundle->name,
                     'api_message' => $res['response_description'],
                     'network' => Network::where('id', $this->network)->first()->name,
@@ -365,14 +368,14 @@ class BuyData extends Page implements HasForms
                     ->success()
                     ->send();
             } else {
-                $transaction = auth()->user()->transaction()->create([
+                $transaction = $user->transaction()->create([
                     'price' => $this->price,
                     'transaction_type' => 'airtime',
                     'status' => 'failed',
                     'reference' => $res['requestId'] ?? '',
-                    'amount_before' => auth()->user()->balance,
+                    'amount_before' => $user->balance,
                     'description' => $bundle->name,
-                    'amount_after' => auth()->user()->balance,
+                    'amount_after' => $user->balance,
                     'api_message' => $res['response_description'],
                     'network' => Network::where('id', $this->network)->first()->name,
                     'phone_number' => $this->phoneNumber,

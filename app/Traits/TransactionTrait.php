@@ -19,6 +19,6 @@ trait TransactionTrait
     }
     public function addBalance(User $user, $amount)
     {
-        $user->deposit($amount);
+        $user->deposit($amount); 
     }
 }

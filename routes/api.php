@@ -8,9 +8,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/monnify-fund-wallet', function (Request $request) {
-
-});
+Route::post('/fund-wallet', );
 
 Route::get('update-transaction', function (Request $request) {
     if($request['type'] === 'transaction-update'){

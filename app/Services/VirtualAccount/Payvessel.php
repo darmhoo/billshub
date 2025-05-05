@@ -28,7 +28,7 @@ class Payvessel
                 'phoneNumber' => $phone,
                 'nin' => $nin,
                 'bvn' => $bvn,
-                'bankcode' => ["999991", "120001"],
+                'bankcode' => ["120001"],
                 'businessid' => $this->virtualAccount->merchant_code,
                 'account_type' => "STATIC"
             ];
@@ -39,9 +39,9 @@ class Payvessel
 
             $res = Http::withHeaders([
                 'Content-Type' => 'application/json',
-                'api-key' => 'Bearer ' . $this->virtualAccount->api_key,
+                'api-key' => $this->virtualAccount->api_key,
                 'api-secret' => 'Bearer ' . $this->virtualAccount->secret_key,
-            ])->post($this->virtualAccount->url . 'pms/api/external/request/customerReservedAccount', $data);
+            ])->post($this->virtualAccount->url . 'pms/api/external/request/customerReservedAccount/', $data);
 
 
             return $res->json();

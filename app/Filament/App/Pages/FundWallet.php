@@ -9,7 +9,9 @@ use App\Services\VirtualAccount\PalmPay;
 use App\Services\VirtualAccount\Payvessel;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Auth;
 
 class FundWallet extends Page
 {
@@ -29,7 +31,7 @@ class FundWallet extends Page
 
     protected function getViewData(): array
     {
-        $user = User::find(auth()->user()->id);
+        $user = User::find(Auth::user()->id);
         // dd($user);
         return [
             'bank_accounts' => $user->accounts
@@ -38,6 +40,8 @@ class FundWallet extends Page
 
     public function getVirtualAccount()
     {
+        $user = User::find(Auth::user()->id);
+
         $vauto = VirtualAccount::where('name', 'Payvessel')->first();
         $accountService = new Payvessel($vauto);
         return Action::make('getVirtualAccount')
@@ -60,20 +64,33 @@ class FundWallet extends Page
                     ->length(11),
             ])
             ->action(function ($data) use ($accountService) {
-                $res = $accountService->createVirtualAccount($data['bvn'], auth()->user()->name, auth()->user()->email, auth()->user()->phone_number, $data['nin']);
-                dd($res);
+                $res = $accountService->createVirtualAccount($data['bvn'], Auth::user()->name, Auth::user()->email, Auth::user()->phone_number, $data['nin']);
+                // dd($res);
                 if ($res['status'] == true) {
-                    dd($res);
+                    // dd($res);
+                    $account = UserAccount::where('user_id', Auth::user()->id)->where('account_number', $res['banks'][0]['accountNumber'])->first();
+                    if ($account) {
+                        Notification::make()
+                            ->title('Account Alredy Exists')
+                            ->danger()
+                            ->send();
+                    }
                     UserAccount::create([
-                        'user_id' => auth()->user()->id,
-                        'bank_name' => 'palmpay',
-                        'bank_code' => $res['data']['accountReference'],
-                        'account_name' => $res['data']['virtualAccountName'],
-                        'account_number' => $res['data']['virtualAccountNo'],
+                        'user_id' => Auth::user()->id,
+                        'bank_name' => '9Payment Service Bank',
+                        'bank_code' => $res['banks'][0]['bankCode'],
+                        'account_name' => $res['banks'][0]['accountName'],
+                        'account_number' => $res['banks'][0]['accountNumber'],
                     ]);
-                    $this->notify('success', 'Virtual Account Created Successfully');
+                    Notification::make()
+                        ->title('Wallet Created Successfully')
+                        ->success()
+                        ->send();
                 } else {
-                    $this->notify('error', $res['message']);
+                    Notification::make()
+                        ->title('Wallet Creation Failed')
+                        ->danger()
+                        ->send();
                 }
 
 
