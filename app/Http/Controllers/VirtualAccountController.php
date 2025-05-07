@@ -12,7 +12,12 @@ class VirtualAccountController extends Controller
     public function verifyPaymentPV(Request $request)
     {
         // dd($request->all());
-        $payload = file_get_contents('php://input');
+        $payload = $request->getContent();
+        if (empty($payload)) {
+            return response()->json([
+                "response" => "Payload is empty"
+            ]);
+        }
         $payvessel_signature = $request['HTTP_PAYVESSEL_HTTP_SIGNATURE'];
         $ip_address = request()->ip();
         $api_secret = VirtualAccount::where('name', 'Payvessel')->first()->secret_key;
