@@ -38,34 +38,35 @@ class VirtualAccountController extends Controller
 
 
         $transaction = Transaction::where('reference', $reference)->first();
-        if($transaction){
+        if ($transaction) {
             return response()->json([
                 "response" => "Transaction already exists"
-            ]);
+            ], 200);
         }
-        
-        $transaction = Transaction::create([
-            'user_id' => $request['user_id'],
-            'amount' => $amount,
-            'settlement_amount' => $settlementAmount,
-            'fee' => $fee,
-            'reference' => $reference,
-            'description' => $description,
-            'status' => 'pending',
-            'type' => 'credit',
-            'method' => 'virtual_account'
-        ]);
-        if ($transaction && $request['data']['content']['transactions']['status']) {
-            $transaction->update([
-                'status' => 'completed',
-                'response' => $request['data']['content']['transactions']
-            ]);
-            return response()->json([
-                "response" => "success"
-            ]);
-        }
+
+        // $transaction = Transaction::create([
+        //     'user_id' => $request['user_id'],
+        //     'amount' => $amount,
+        //     'settlement_amount' => $settlementAmount,
+        //     'fee' => $fee,
+        //     'reference' => $reference,
+        //     'description' => $description,
+        //     'status' => 'pending',
+        //     'type' => 'credit',
+        //     'method' => 'virtual_account'
+        // ]);
+        // if ($transaction && $request['data']['content']['transactions']['status']) {
+        //     $transaction->update([
+        //         'status' => 'completed',
+        //         'response' => $request['data']['content']['transactions']
+        //     ]);
+        //     return response()->json([
+        //         "response" => "success"
+        //     ]);
+        // }
         return response()->json([
-            "response" => "failed"
-        ]);
+            "message" => "success",
+            "data" => $data
+        ], 200);
     }
 }
