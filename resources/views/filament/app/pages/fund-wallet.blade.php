@@ -4,7 +4,7 @@
             <p>Fund your wallet instantly by paying into the account details below and your account will be credited
                 automatically.</p>
             <div class="my-5">
-                NOTE: A charges of <span class="text-red-600 font-semibold">₦54.00</span> will be deducted from your
+                NOTE: <span class="text-red-600 font-semibold">1% service charge</span> will be deducted from your
                 payment.
             </div>
 
