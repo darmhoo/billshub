@@ -24,6 +24,22 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return $record->name . ' - ' . $record->phone_number;
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'name',
+            'email',
+            'phone_number',
+        ];
+    }
+
     public static function form(Form $form): Form
     {
         return $form

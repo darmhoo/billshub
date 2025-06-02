@@ -15,6 +15,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Carbon;
 
@@ -22,7 +23,20 @@ class DataBundleResource extends Resource
 {
     protected static ?string $model = DataBundle::class;
     protected static ?string $navigationGroup = 'Data';
+    protected static ?string $recordTitleAttribute = 'name';
 
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return $record->name . ' - ' . $record->network->name . ' - ' . $record->automation->name;
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'name',
+            'price'
+        ];
+    }
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
